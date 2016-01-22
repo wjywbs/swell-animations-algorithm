@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 def diff1(a,b):
   """One sided diff"""
@@ -29,32 +30,36 @@ def hermite(t,a,b,c,d):
   (-2 * t**3 + 3 * t**2) * c + \
   (t**3 - t**2) * diff3(b,c,d)
 
+def plot(pts):
+  """Plot list of (x,y) coordinates"""
+  x, y = zip(*pts)
+  plt.plot(x, y)
+  plt.show()
+
 def main():
+  # Read in control points
+  ctrl_pts = None
   with open('control_points.txt','r') as f:
-    pts = []
-    for line in f:
-      pt = line.split()
-      x = float(pt[0])
-      y = float(pt[1])
-      pts.append(np.array([x,y]))
+    ctrl_pts = [np.array(map(float, line.split())) for line in f]
 
-    # Printing out the interpolating points
-    resolution = 50
+  # Printing out the interpolating points
 
-    for x in range(resolution):
-      dt = float(x)/resolution
-      print hermiteS(dt,*pts[:3])
+  resolution = 50
 
-    # Print the interior points
-    for x in range(resolution+1):
-      dt = float(x)/resolution
-#      print dt,hermite(dt,*pts)
-      print hermite(dt,*pts)
+  for x in range(resolution):
+    dt = float(x)/resolution
+    print hermiteS(dt,*ctrl_pts[:3])
 
-    # Print the end segment points
-    for x in range(1,resolution+1):
-      dt = float(x)/resolution
-      print hermiteE(dt,*pts[1:])
+  # Print the interior points
+  for x in range(resolution+1):
+    dt = float(x)/resolution
+#    print dt,hermite(dt,*pts)
+    print hermite(dt,*ctrl_pts)
+
+  # Print the end segment points
+  for x in range(1,resolution+1):
+    dt = float(x)/resolution
+    print hermiteE(dt,*ctrl_pts[1:])
 
 if __name__ == "__main__":
   main()
