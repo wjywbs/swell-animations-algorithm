@@ -42,24 +42,26 @@ def main():
   with open('control_points.txt','r') as f:
     ctrl_pts = [np.array(map(float, line.split())) for line in f]
 
-  # Printing out the interpolating points
+  resolution = 50 # Points per piece of piecewise spline (between 2 control points)
+  spline = []
 
-  resolution = 50
+  # Interpolate first segment of spline using forward difference
+  for t in range(resolution):
+    dt = float(t)/resolution
+    spline.append(hermiteS(dt, *ctrl_pts[:3]))
 
-  for x in range(resolution):
-    dt = float(x)/resolution
-    print hermiteS(dt,*ctrl_pts[:3])
+  # Interpolate interior segments of spline 
+  for t in range(resolution+1):
+    dt = float(t)/resolution
+    spline.append(hermite(dt,*ctrl_pts))
 
-  # Print the interior points
-  for x in range(resolution+1):
-    dt = float(x)/resolution
-#    print dt,hermite(dt,*pts)
-    print hermite(dt,*ctrl_pts)
+  # Interpolate end segment of spline using backward difference
+  for t in range(1,resolution+1):
+    dt = float(t)/resolution
+    spline.append(hermiteE(dt,*ctrl_pts[1:]))
 
-  # Print the end segment points
-  for x in range(1,resolution+1):
-    dt = float(x)/resolution
-    print hermiteE(dt,*ctrl_pts[1:])
+  for l in spline:
+	print l
 
 if __name__ == "__main__":
   main()
