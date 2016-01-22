@@ -41,10 +41,10 @@ def main():
 	ctrl_pts = None
 	with open('control_points.txt','r') as f:
 		ctrl_pts = [np.array(map(float, line.split())) for line in f]
+	n = len(ctrl_pts)
 
 	resolution = 50 # Points per piece of piecewise spline (between 2 control points)
 	spline = ctrl_pts[:1]
-	n = len(ctrl_pts)
 
 	# Interpolate first segment of spline using forward difference
 	p0 = ctrl_pts[0]
