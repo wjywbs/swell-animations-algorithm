@@ -5,7 +5,7 @@ struct pt {
 	double y;
 };
 
-struct pt minus(struct pt *l, struct pt *r)
+struct pt minus(const struct pt *l, const struct pt *r)
 {
 	struct pt tmp = {
 		.x = l->x - r->x,
@@ -14,7 +14,7 @@ struct pt minus(struct pt *l, struct pt *r)
 	return tmp;
 }
 
-struct pt mult(struct pt *l, struct pt *r)
+struct pt mult(const struct pt *l, const struct pt *r)
 {
 	struct pt tmp = {
 		.x = l->x * r->x,
@@ -23,7 +23,7 @@ struct pt mult(struct pt *l, struct pt *r)
 	return tmp;
 }
 
-struct pt diff1(struct pt *a, struct pt *b)
+struct pt diff1(const struct pt *a, const struct pt *b)
 {
 /* TODO(Make this work)
 		return mult(3.0, minus(a,b));*/
