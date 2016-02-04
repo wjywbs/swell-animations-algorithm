@@ -27,6 +27,11 @@ struct pt diff1(const struct pt *a, const struct pt *b)
 {
 /* TODO(Make this work)
 		return mult(3.0, minus(a,b));*/
+	struct pt tmp = {
+		.x = 1,
+		.y = 1,
+	};
+	return tmp;
 }
 
 int main(int argc, char *argv[])
@@ -35,4 +40,5 @@ int main(int argc, char *argv[])
 	struct pt b = {.x=2.0,.y=3.0};
 	struct pt c = minus(&a,&b);
 	printf("(%f,%f)\n",c.x,c.y);
+	return 0;
 }
