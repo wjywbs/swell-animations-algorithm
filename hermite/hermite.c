@@ -7,20 +7,20 @@ struct pt {
 
 struct pt minus(struct pt *l, struct pt *r)
 {
-	struct pt diff = {
+	struct pt tmp = {
 		.x = l->x - r->x,
 		.y = l->y - r->y
 	};
-	return diff;
+	return tmp;
 }
 
 struct pt mult(struct pt *l, struct pt *r)
 {
-	struct pt mult = {
+	struct pt tmp = {
 		.x = l->x * r->x,
 		.y = l->y * r->y
 	};
-	return mult;
+	return tmp;
 }
 
 struct pt diff1(struct pt *a, struct pt *b)
@@ -29,7 +29,7 @@ struct pt diff1(struct pt *a, struct pt *b)
 		return mult(3.0, minus(a,b));*/
 }
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
 	struct pt a = {.x=1.0,.y=1.0};
 	struct pt b = {.x=2.0,.y=3.0};
