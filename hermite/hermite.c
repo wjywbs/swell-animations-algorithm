@@ -39,6 +39,11 @@ struct pt forwardDiff(const struct pt *a, const struct pt *b)
 	return tmp;
 }
 
+/* Three point diff */
+struct pt midpointDiff(const struct pt *a, const struct pt *b, const struct pt *c) {
+	// TODO: Implement this function
+}
+
 /* Display a point to the screen */
 void displayPoint(const struct pt *point) {
 	printf("(%f, %f)\n", point->x, point->y);
