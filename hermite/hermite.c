@@ -1,44 +1,50 @@
 #include <stdio.h>
 
+typedef struct pt Point;
 struct pt {
 	double x;
 	double y;
 };
 
-struct pt minus(const struct pt *l, const struct pt *r)
+Point minus(const Point *l, const Point *r)
 {
-	struct pt tmp = {
+	Point tmp = {
 		.x = l->x - r->x,
 		.y = l->y - r->y
 	};
 	return tmp;
 }
 
-struct pt mult(const struct pt *l, const struct pt *r)
+Point mult(const Point *l, const Point *r)
 {
-	struct pt tmp = {
+	Point tmp = {
 		.x = l->x * r->x,
 		.y = l->y * r->y
 	};
 	return tmp;
 }
 
-struct pt diff1(const struct pt *a, const struct pt *b)
-{
-/* TODO(Make this work)
-		return mult(3.0, minus(a,b));*/
-	struct pt tmp = {
-		.x = 1,
-		.y = 1,
-	};
+Point multScalar(const double scalar, const Point *point) {
+	Point tmp = {point->x * scalar, point->y * scalar};
 	return tmp;
+}
+
+/* One sided diff */
+Point forwardDiff(const Point *a, const Point *b)
+{
+	Point tmp = multScalar(3, minus(b, a));
+	return tmp;
+}
+
+void displayPoint(const Point *point) {
+	printf("(%f, %f)\n", point->x, point->y);
 }
 
 int main(int argc, char *argv[])
 {
-	struct pt a = {.x=1.0,.y=1.0};
-	struct pt b = {.x=2.0,.y=3.0};
-	struct pt c = minus(&a,&b);
-	printf("(%f,%f)\n",c.x,c.y);
+	Point a = {.x=1.0,.y=1.0};
+	Point b = {.x=2.0,.y=3.0};
+	Point c = minus(&a,&b);
+	displayPoint(&c);
 	return 0;
 }
