@@ -1,1 +1,6 @@
 https://www.kernel.org/doc/Documentation/CodingStyle
+
+To compile hermite.c, type the following:
+gcc hermite.c -o hermite -lm
+
+We must manually link the math library so we can make use of the pow function

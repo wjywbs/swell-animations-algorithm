@@ -1,4 +1,12 @@
+/**
+ * To compile, type the following:
+ * gcc hermite.c -o hermite -lm
+ *
+ * We must manually link the math library to make use of the pow function
+ */
+
 #include <stdio.h>
+#include <math.h>
 
 struct pt {
 	double x;
@@ -42,6 +50,22 @@ struct pt forwardDiff(const struct pt *a, const struct pt *b)
 /* Three point diff */
 struct pt midpointDiff(const struct pt *a, const struct pt *b, const struct pt *c) {
 	// TODO: Implement this function
+}
+
+double hermiteBasis00(double t) {
+	return (2 * pow(t, 3)) - (3 * pow(t, 2)) + 1;
+}
+
+double hermiteBasis10(double t) {
+	return pow(t, 3) - (2 * pow(t, 2)) + t;
+}
+
+double hermiteBasis01(double t) {
+	return (-2 * pow(t, 3)) + (3 * pow(t, 2));
+}
+
+double hermiteBasis11(double t) {
+	return pow(t, 3) - pow(t, 2);
 }
 
 /* Display a point to the screen */
