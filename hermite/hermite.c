@@ -6,6 +6,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
 struct pt {
@@ -13,52 +14,60 @@ struct pt {
 	double y;
 };
 
+struct pt *createPoint(double x, double y) {
+	struct pt *newPoint = malloc(sizeof(struct pt));
+	newPoint->x = x;
+	newPoint->y = y;
+	return newPoint;
+}
+
 /* Add two points */
-struct pt add(const struct pt *l, const struct pt *r) {
-	struct pt tmp = {
-		.x = l->x + r->x,
-		.y = l->y + r->y
-	};
+struct pt *add(const struct pt *l, const struct pt *r) {
+	struct pt *tmp = createPoint(l->x + r->x, l->y + r->y);
 	return tmp;
 }
 
 /* Subtract two points */
-struct pt minus(const struct pt *l, const struct pt *r)
+struct pt *minus(const struct pt *l, const struct pt *r)
 {
-	struct pt tmp = {
-		.x = l->x - r->x,
-		.y = l->y - r->y
-	};
+	struct pt *tmp = createPoint(l->x - r->x, l->y - r->y);
 	return tmp;
 }
 
 /* Multiple two points */
-struct pt mult(const struct pt *l, const struct pt *r)
+struct pt *mult(const struct pt *l, const struct pt *r)
 {
-	struct pt tmp = {
-		.x = l->x * r->x,
-		.y = l->y * r->y
-	};
+	struct pt *tmp = createPoint(l->x * r->x, l->y * r->y);
 	return tmp;
 }
 
 /* Multiply a point by a scalar */
-struct pt multScalar(const double scalar, const struct pt *point) {
-	struct pt tmp = {point->x * scalar, point->y * scalar};
+struct pt *multScalar(const double scalar, const struct pt *point) {
+	struct pt *tmp = createPoint(point->x * scalar, point->y * scalar);
 	return tmp;
 }
 
 /* One sided diff */
-struct pt forwardDiff(const struct pt *a, const struct pt *b)
+struct pt *forwardDiff(const struct pt *a, const struct pt *b)
 {
-	struct pt tmp = minus(b, a);
-	tmp = multScalar(3, &tmp);
+	struct pt *tmp = minus(b, a);
+	tmp = multScalar(3, tmp);
 	return tmp;
 }
 
 /* Three point diff */
-struct pt midpointDiff(const struct pt *a, const struct pt *b, const struct pt *c) {
-	// TODO: Implement this function
+struct pt *midpointDiff(const struct pt *a, const struct pt *b, const struct pt *c) {
+	// Define the offset to use
+	const double offset = ((double) 3) / 2;
+
+	// Since this equation is rather large, we are splitting it up into smaller components
+	// Define the first and second term
+	struct pt *term1 = multScalar(offset, minus(c, b));
+	struct pt *term2 = multScalar(offset, minus(b, a));
+
+	// Define the result value
+	struct pt *result = add(term1, term2);
+	return result;
 }
 
 double hermiteBasis00(double t) {
@@ -84,9 +93,13 @@ void displayPoint(const struct pt *point) {
 
 int main(int argc, char *argv[])
 {
-	struct pt a = {.x=1.0,.y=1.0};
-	struct pt b = {.x=2.0,.y=3.0};
-	struct pt c = minus(&a,&b);
-	displayPoint(&c);
+	struct pt *a = createPoint(1, 1);
+	struct pt *b = createPoint(2, 3);
+	struct pt *c = minus(a, b);
+	displayPoint(c);
+
+	free(a);
+	free(b);
+	free(c);
 	return 0;
 }
