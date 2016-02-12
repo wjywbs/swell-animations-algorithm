@@ -13,6 +13,15 @@ struct pt {
 	double y;
 };
 
+/* Add two points */
+struct pt add(const struct pt *l, const struct pt *r) {
+	struct pt tmp = {
+		.x = l->x + r->x,
+		.y = l->y + r->y
+	};
+	return tmp;
+}
+
 /* Subtract two points */
 struct pt minus(const struct pt *l, const struct pt *r)
 {
