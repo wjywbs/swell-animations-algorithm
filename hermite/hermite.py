@@ -3,6 +3,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# mathplotlib: http://matplotlib.org/users/installing.html
+
 def diff1(a,b):
 	"""One sided diff"""
 	return 3.0 * (b - a)
