@@ -8,11 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
-struct pt {
-	double x;
-	double y;
-};
+#include "../point.h"
 
 struct pt *createPoint(double x, double y) {
 	struct pt *newPoint = (pt*)malloc(sizeof(struct pt));
