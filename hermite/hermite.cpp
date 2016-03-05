@@ -10,36 +10,37 @@
 #include <math.h>
 #include "../point.h"
 
-struct pt *createPoint(double x, double y) {
+struct pt *createPoint(double x, double y, double z) {
 	struct pt *newPoint = (pt*)malloc(sizeof(struct pt));
 	newPoint->x = x;
 	newPoint->y = y;
+    newPoint->z = z;
 	return newPoint;
 }
 
 /* Add two points */
 struct pt *add(const struct pt *l, const struct pt *r) {
-	struct pt *tmp = createPoint(l->x + r->x, l->y + r->y);
+	struct pt *tmp = createPoint(l->x + r->x, l->y + r->y, l->z + r->z);
 	return tmp;
 }
 
 /* Subtract two points */
 struct pt *minus(const struct pt *l, const struct pt *r)
 {
-	struct pt *tmp = createPoint(l->x - r->x, l->y - r->y);
+	struct pt *tmp = createPoint(l->x - r->x, l->y - r->y, l->z - r->z);
 	return tmp;
 }
 
 /* Multiple two points */
 struct pt *mult(const struct pt *l, const struct pt *r)
 {
-	struct pt *tmp = createPoint(l->x * r->x, l->y * r->y);
+	struct pt *tmp = createPoint(l->x * r->x, l->y * r->y, l->z * r->z);
 	return tmp;
 }
 
 /* Multiply a point by a scalar */
 struct pt *multScalar(const double scalar, const struct pt *point) {
-	struct pt *tmp = createPoint(point->x * scalar, point->y * scalar);
+	struct pt *tmp = createPoint(point->x * scalar, point->y * scalar, point->z * scalar);
 	return tmp;
 }
 
@@ -92,13 +93,13 @@ struct pt *hermite(const double t, const struct pt *p0, const struct pt *m0, con
 
 /* Display a point to the screen */
 void displayPoint(const struct pt *point) {
-	printf("(%f, %f)\n", point->x, point->y);
+	printf("(%f, %f, %f)\n", point->x, point->y, point->z);
 }
 
 int main(int argc, char *argv[])
 {
-	struct pt *a = createPoint(1, 1);
-	struct pt *b = createPoint(2, 3);
+	struct pt *a = createPoint(1, 1, 1);
+	struct pt *b = createPoint(2, 3, 1);
 	struct pt *c = minus(a, b);
 	displayPoint(c);
 
