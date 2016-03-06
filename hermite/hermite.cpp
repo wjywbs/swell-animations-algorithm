@@ -50,7 +50,7 @@ double getDistance(const struct pt *l, const struct pt *r) {
     double x = tmp->x;
     double y = tmp->y;
     double z = tmp->z;
-	return sqrt(x + y + z);
+	return sqrt(pow(x,2) + pow(y,2) + pow(z,2));
 }
 
 
