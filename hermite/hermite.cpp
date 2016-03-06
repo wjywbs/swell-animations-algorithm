@@ -44,6 +44,16 @@ struct pt *multScalar(const double scalar, const struct pt *point) {
 	return tmp;
 }
 
+/* Get the distance between two points */
+double getDistance(const struct pt *l, const struct pt *r) {
+	struct pt *tmp = minus(l, r);
+    double x = tmp->x;
+    double y = tmp->y;
+    double z = tmp->z;
+	return sqrt(x + y + z);
+}
+
+
 /* One sided diff */
 struct pt *forwardDiff(const struct pt *a, const struct pt *b)
 {
