@@ -1,6 +1,6 @@
 // AnimationGeneration.cpp - backend animation generation functions
 // Author: Sarah
-// Date last updated: 03/05/2016
+// Date last updated: 03/06/2016
 //
 
 #include <iostream>
@@ -16,6 +16,7 @@ using namespace swellanimations;
 using namespace std;
 
 // uses hermite.cpp to calculate a spline based on control points
+// TODO: account for repeated points at the end of a spline
 std::vector<struct pt*> getSpline(ModelData* modelData) {
     std::vector<struct pt*> v;
     for (int i = 0; i < modelData->controlpoints_size()-3; i+=3) {
@@ -40,18 +41,54 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
     return v;
 }
 
-// returns a 1-frame animation of the model evaluated at a certain point along spline
-// TODO: get the time it takes the user to draw the LOA, going to need the control points dropped at intervals
-Animation* evaluateDLOA(ModelData* modelData) {
-    Animation* animation = new Animation();
-    return animation;
+
+// returns the length of the spline by adding the distances between all interpolated points
+double getSplineLength(vector<struct pt*> spline) {
+    double length = 0;
+    for (int i = 0; i < spline.size()-1; i++) {
+        double d = getDistance(spline.at(i), spline.at(i+1));
+        length += d;
+    }
+    return length;
+}
+
+// returns the length of the model by adding the distances between joints
+double getModelLength(ModelData* modelData) {
+    double length = 0;
+    Node model = modelData->model();
+    // TODO: understand model data structure better
+    for (int i = 0; i < modelData->controlpoints_size()-1; i++) {
+        Vector* l = modelData->mutable_controlpoints(i);
+        Vector* r = modelData->mutable_controlpoints(i+1);
+        struct pt* left = createPoint((double)l->x(), (double)l->y(), (double)l->z());
+        struct pt* right = createPoint((double)r->x(), (double)r->y(), (double)r->z());
+        double d = getDistance(left,right);
+        length += d;
+    }
+    return length;
 }
 
 // computes the constant b:
 // the ratio between spline length and model length
-double calculateB(ModelData* modelData) {
-    
-    return 0;
+double calculateB(ModelData* modelData, vector<struct pt*> spline) {
+    double splineLength = getSplineLength(spline);
+    double modelLength = getModelLength(modelData);
+    double b = modelLength / splineLength;
+    return b;
+}
+
+// returns a 1-frame animation of the model evaluated at a certain point along spline
+// TODO: can the return type be a frame??
+// TODO: get the time it takes the user to draw the LOA, going to need the control points dropped at intervals
+Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
+    Animation* animation = new Animation();
+    double b = calculateB(modelData, spline);
+    // TODO: calculate points in spline per model 
+    // double pointsPerModel = spline.size() * b
+    // TODO: calculate which point goes with which joint. this will be the number to increment by
+    // double pointToJoint = (pointsPerModel) / ((number of joints in model) - 1)
+    // TODO: create a frame with joints mapped to appropriate points
+    return animation;
 }
 
 // returns an Animation object to send back to Unity
