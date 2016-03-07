@@ -139,7 +139,7 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
 
     vector<int> correspondingPoints = mapPoints(root, pointsPerFrame, modelLength);
     for (int i = 0; i < spline.size() - pointsPerFrame; i++) {
-        int index;
+        int index = 0;
         frame = jointsToSpline(root, spline, correspondingPoints, index);
         vector<int> newCorresponding;
         for (int j = 0; j < correspondingPoints.size(); j++) {
