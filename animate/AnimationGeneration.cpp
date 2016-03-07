@@ -8,7 +8,7 @@
 #include <sstream>
 #include <string.h>
 #include <vector>
-#include "AnimationDataSerializer/modeldata.pb.h"
+#include "../AnimationDataSerializer/modeldata.pb.h"
 #include "../point.h"
 #include "../hermite/hermite.cpp"
 
