@@ -79,7 +79,7 @@ double furthestNodeDistance(Node root) {
 // returns the indices in the spline that correspond to joints of the model in the first frame
 vector<int> mapPoints(Node root, double pointsPerFrame, double modelLength) {
     vector<int> total;
-    int corresponding = ((double)root.mutable_position()->z() / modelLength ) * pointsPerFrame;
+    int corresponding = ((double)abs(root.mutable_position()->z()) / modelLength ) * pointsPerFrame;
     total.push_back(corresponding);
     for (int i = 0; i < root.children_size(); i++) {
         vector<int> c = mapPoints(root.children(i), pointsPerFrame, modelLength);
