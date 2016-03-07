@@ -14,7 +14,7 @@ struct pt *createPoint(double x, double y, double z) {
 	struct pt *newPoint = (pt*)malloc(sizeof(struct pt));
 	newPoint->x = x;
 	newPoint->y = y;
-    newPoint->z = z;
+	newPoint->z = z;
 	return newPoint;
 }
 
@@ -47,9 +47,9 @@ struct pt *multScalar(const double scalar, const struct pt *point) {
 /* Get the distance between two points */
 double getDistance(const struct pt *l, const struct pt *r) {
 	struct pt *tmp = minus(l, r);
-    double x = tmp->x;
-    double y = tmp->y;
-    double z = tmp->z;
+	double x = tmp->x;
+	double y = tmp->y;
+	double z = tmp->z;
 	return sqrt(pow(x,2) + pow(y,2) + pow(z,2));
 }
 

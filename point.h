@@ -4,7 +4,7 @@
 struct pt {
 	double x;
 	double y;
-    double z;
+	double z;
 };
 
 #endif
