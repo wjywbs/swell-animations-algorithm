@@ -132,7 +132,7 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     // calculate points in spline per frame
     double pointsPerFrame = spline.size() * b;
 
-    // calculate which point goes with which joint. this will be the number to increment by
+    // calculate which point goes with which joint
     Node root = modelData->model();
     Node frame;
 
@@ -145,9 +145,9 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
             newCorresponding.push_back(correspondingPoints.at(j)+1);
         }
         correspondingPoints = newCorresponding;
+        Node* a = animation->add_frames();
+        a->CopyFrom(frame);
     }
-    Node* a = animation->add_frames();
-    a->CopyFrom(frame);
 
     return animation;
 }
