@@ -93,6 +93,8 @@ vector<int> mapPoints(Node root, double pointsPerFrame, double modelLength) {
 // returns a new tree (frame) with new positions based on the calculated corresponding points in the spline
 Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index) {
     Node frame;
+	frame.CopyFrom(root);
+	frame.clear_children();
     int c = correspondingPoints.at(index);
     struct pt* s = spline.at(c);
     frame.mutable_position()->set_x(s->x);
