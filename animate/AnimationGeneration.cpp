@@ -93,8 +93,12 @@ vector<int> mapPoints(Node root, double pointsPerFrame, double modelLength) {
 // returns a new tree (frame) with new positions based on the calculated corresponding points in the spline
 Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index) {
     Node frame;
-	frame.CopyFrom(root);
-	frame.clear_children();
+	frame.set_name(root.name());
+	//Rotation will need to be calculated, for now we are just copying
+	frame.mutable_eularangles()->set_x(root.eularangles().x());
+	frame.mutable_eularangles()->set_y(root.eularangles().y());
+	frame.mutable_eularangles()->set_z(root.eularangles().z());
+
     int c = correspondingPoints.at(index);
     struct pt* s = spline.at(c);
     frame.mutable_position()->set_x(s->x);
