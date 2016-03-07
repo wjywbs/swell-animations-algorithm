@@ -60,14 +60,14 @@ double getSplineLength(vector<struct pt*> spline) {
     double length = 0;
     for (int i = 0; i < spline.size()-1; i++) {
         double d = getDistance(spline.at(i), spline.at(i+1));
-        length += d;
+        length += abs(d);
     }
     return length;
 }
 
 // return the length of the longest path from the root
 double furthestNodeDistance(Node root) {
-    double max = (double)root.mutable_position()->z();
+    double max = (double)abs(root.mutable_position()->z());
     for (int i = 0; i < root.children_size(); i++) {
         double n = furthestNodeDistance(root.children(i));
         if (n > max)
