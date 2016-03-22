@@ -5,4 +5,4 @@ This repo contains the backend which will generate the animation.
 * Linux: make
 
 ### Builds:
-blarg
+https://vps73020.vps.ovh.ca:8443/job/backend/ws/bin/
