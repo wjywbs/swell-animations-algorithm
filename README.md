@@ -2,7 +2,7 @@
 This repo contains the backend which will generate the animation.
 
 ### Usage:
-## Linux
+#### Linux
 * Building: make build
 * Build protobuf files if missing/outdated: make protobuf-cpp
 
