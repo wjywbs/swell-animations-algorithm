@@ -3,14 +3,16 @@
 // Date last updated: 03/06/2016
 //
 
+#include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <stdio.h>
 #include <sstream>
 #include <string.h>
 #include <vector>
-#include "../AnimationDataSerializer/modeldata.pb.h"
-#include "../point.h"
-#include "../hermite/hermite.cpp"
+#include "modeldata.pb.h"
+#include "point.h"
+#include "hermite.cpp"
 
 using namespace swellanimations;
 using namespace std;
@@ -90,8 +92,21 @@ vector<int> mapPoints(Node root, double pointsPerFrame, double modelLength) {
     return total;
 }
 
+void printTree(Node frame, ofstream *myfile) {
+    *myfile << "(";
+    *myfile << fixed << setprecision(5) << frame.mutable_position()->x();
+    *myfile << ", ";
+    *myfile << fixed << setprecision(5) << frame.mutable_position()->y();
+    *myfile << ", ";
+    *myfile << fixed << setprecision(5) << frame.mutable_position()->z();
+    *myfile << ")" << endl;
+    for (int i = 0; i < frame.children_size(); i++) {
+        printTree(frame.children(i), myfile);
+    }
+}
+
 // returns a new tree (frame) with new positions based on the calculated corresponding points in the spline
-Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index) {
+Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index, ofstream *myfile) {
     Node frame;
 	frame.set_name(root.name());
 	//Rotation will need to be calculated, for now we are just copying
@@ -105,7 +120,8 @@ Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspond
     frame.mutable_position()->set_y(s->y);
     frame.mutable_position()->set_z(s->z);
     for (int i = 0; i < root.children_size(); i++) {
-        Node tmp = jointsToSpline(root.children(i), spline, correspondingPoints, ++index);
+        //*myfile << index << endl;
+        Node tmp = jointsToSpline(root.children(i), spline, correspondingPoints, ++index, myfile);
         tmp.set_name(root.children(i).name());
         Node* p = frame.add_children();
         p->CopyFrom(tmp);
@@ -144,10 +160,14 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     Node root = modelData->model();
     Node frame;
 
+    ofstream myfile;
+    myfile.open ("/home/psarahdactyl/Documents/aafunfunfun.txt");
     vector<int> correspondingPoints = mapPoints(root, pointsPerFrame, modelLength);
     for (int i = 0; i < spline.size() - pointsPerFrame; i++) {
         int index = 0;
-        frame = jointsToSpline(root, spline, correspondingPoints, index);
+        frame = jointsToSpline(root, spline, correspondingPoints, index, &myfile);
+        printTree(frame, &myfile);
+        myfile << "-----------------------" << endl;
         vector<int> newCorresponding;
         for (int j = 0; j < correspondingPoints.size(); j++) {
             newCorresponding.push_back(correspondingPoints.at(j)+1);
@@ -156,6 +176,7 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
         Node* a = animation->add_frames();
         a->CopyFrom(frame);
     }
+    myfile.close();
 
     return animation;
 }
