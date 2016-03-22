@@ -3,5 +3,10 @@ build: src/AnimationGeneration.cpp src/AnimationGenerationWithPrinting.cpp src/d
 
 createBin:
 	mkdir -p bin
+
+protobuf-cpp: .other/protobuf/modeldata.proto
+	protoc -I ./ --cpp_out=. .other/protobuf/modeldata.proto
+	mv .other/protobuf/modeldata.pb.cc src/
+	mv .other/protobuf/modeldata.pb.h include/
 clean:
 	rm AnimationGeneration
