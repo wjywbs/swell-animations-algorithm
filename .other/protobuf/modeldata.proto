@@ -1,0 +1,20 @@
+syntax = "proto2";
+
+package swellanimations;
+
+message Animation {
+	repeated Node frames = 1;
+	optional int32 framesPerSecond = 2;
+}
+
+message Node {
+	optional string name = 1;
+	optional float positionX = 2;
+	optional float positionY = 3;
+	optional float positionZ = 4;
+	optional float rotationX = 5;
+	optional float rotationY = 6;
+	optional float rotationZ = 7;
+	repeated Node children = 8;
+	optional Node parent = 9;
+}
