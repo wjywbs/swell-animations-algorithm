@@ -1,9 +1,0 @@
-MAKE SURE YOU PULL RIGHT BEFORE YOU PUSH TO MAKE SURE NOBODY ELSE IS ALSO MODIFYING WHAT YOU'RE WORKING ON!!!!!!!
-
-Read the following link before writing C code in this repository:
-https://www.kernel.org/doc/Documentation/CodingStyle
-
-To compile hermite.c, type the following:
-gcc hermite.c -o hermite -lm
-
-We must manually link the math library so we can make use of the pow function
