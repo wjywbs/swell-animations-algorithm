@@ -60,14 +60,14 @@ double getSplineLength(vector<struct pt*> spline) {
     double length = 0;
     for (int i = 0; i < spline.size()-1; i++) {
         double d = getDistance(spline.at(i), spline.at(i+1));
-        length += abs(d);
+        length += fabs(d);
     }
     return length;
 }
 
 // return the length of the longest path from the root
 double furthestNodeDistance(Node root) {
-    double max = (double)abs(root.mutable_position()->z());
+    double max = (double)fabs(root.mutable_position()->z());
     for (int i = 0; i < root.children_size(); i++) {
         double n = furthestNodeDistance(root.children(i));
         if (n > max)
@@ -79,7 +79,7 @@ double furthestNodeDistance(Node root) {
 // returns the indices in the spline that correspond to joints of the model in the first frame
 vector<int> mapPoints(Node root, double pointsPerFrame, double modelLength) {
     vector<int> total;
-    int corresponding = ((double)abs(root.mutable_position()->z()) / modelLength ) * pointsPerFrame;
+    int corresponding = ((double)fabs(root.mutable_position()->z()) / modelLength ) * pointsPerFrame;
     total.push_back(corresponding);
     for (int i = 0; i < root.children_size(); i++) {
         vector<int> c = mapPoints(root.children(i), pointsPerFrame, modelLength);
