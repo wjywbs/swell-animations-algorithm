@@ -1,6 +1,6 @@
 // AnimationGeneration.cpp - backend animation generation functions
 // Author: Sarah
-// Date last updated: 03/06/2016
+// Date last updated: 04/03/2016
 //
 
 #include <iostream>
@@ -15,8 +15,8 @@
 using namespace swellanimations;
 using namespace std;
 
-// uses hermite.cpp to calculate a spline based on control points
-// for rolling and keyframing (connecting separated LOAs)
+/* uses hermite.cpp to calculate a spline based on control points */
+/* for rolling and keyframing (connecting separated LOAs) */
 std::vector<struct pt*> getSpline(ModelData* modelData) {
     std::vector<struct pt*> v;
     // TODO: check for self intersection of line
@@ -45,6 +45,7 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
     */
 
     // if line contains no self intersections
+    // get user drawn curve from frontend and store in a vector
     for (int i = 0; i < modelData->controlpoints_size(); i++) {
         Vector* tmp = modelData->mutable_controlpoints(i);
         struct pt* point = createPoint((double)tmp->x(), (double)tmp->y(), (double)tmp->z());
@@ -55,7 +56,8 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
 }
 
 
-// returns the length of the spline by adding the distances between all interpolated points
+/* returns the length of the spline by adding the distances between all interpolated points */
+/* retthis is the length of the user drawn curve */
 double getSplineLength(vector<struct pt*> spline) {
     double length = 0;
     for (int i = 0; i < spline.size()-1; i++) {
@@ -65,7 +67,8 @@ double getSplineLength(vector<struct pt*> spline) {
     return length;
 }
 
-// return the length of the longest path from the root
+/* returns the length of the longest path from the root */
+/* this is roughly the length of the model in the z direction */
 double furthestNodeDistance(Node root) {
     double max = (double)fabs(root.mutable_position()->z());
     for (int i = 0; i < root.children_size(); i++) {
@@ -76,7 +79,9 @@ double furthestNodeDistance(Node root) {
     return max;
 }
 
-// returns the indices in the spline that correspond to joints of the model in the first frame
+/* returns the indices in the spline that correspond to joints of the model in the first frame */
+/* maps the points in the spline to the joints in the model based on the length of the model 
+    and how many points in the spline will make up a single frame */
 vector<int> mapPoints(Node root, double pointsPerFrame, double modelLength) {
     vector<int> total;
     int corresponding = ((double)fabs(root.mutable_position()->z()) / modelLength ) * pointsPerFrame;
@@ -90,14 +95,11 @@ vector<int> mapPoints(Node root, double pointsPerFrame, double modelLength) {
     return total;
 }
 
-// returns a new tree (frame) with new positions based on the calculated corresponding points in the spline
+/* returns a new tree (frame) with new positions based on the calculated corresponding points in the spline */
+/* when called in succession, it moves the model and all of its joints along the spline */
 Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index) {
     Node frame;
 	frame.set_name(root.name());
-	//Rotation will need to be calculated, for now we are just copying
-	//frame.mutable_eularangles()->set_x(root.eularangles().x());
-	//frame.mutable_eularangles()->set_y(root.eularangles().y());
-	//frame.mutable_eularangles()->set_z(root.eularangles().z());
 
     int c = correspondingPoints.at(index);
     struct pt* s = spline.at(c);
@@ -113,16 +115,17 @@ Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspond
     return frame;
 }
 
-// returns the length of the model by adding the distances between joints
+/* returns the length of the model by adding the distances between joints */
 double getModelLength(ModelData* modelData) {
     double length = 0;
     Node model = modelData->model();
+    // call furthestNodeDistance on the root node of the model
     length = furthestNodeDistance(model);
     return length;
 }
 
-// computes the constant b:
-// the ratio between spline length and model length
+/* computes the constant b:
+    the ratio between spline length and model length */
 double calculateB(ModelData* modelData, vector<struct pt*> spline) {
     double splineLength = getSplineLength(spline);
     double modelLength = getModelLength(modelData);
@@ -130,10 +133,12 @@ double calculateB(ModelData* modelData, vector<struct pt*> spline) {
     return b;
 }
 
-// returns an animation of the model evaluated at a certain point along spline
+/* returns an animation of the model evaluated at a certain point along spline */
 // TODO: get the time it takes the user to draw the LOA, going to need the control points dropped at intervals
 Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     Animation* animation = new Animation();
+
+    // calculate the constant b
     double b = calculateB(modelData, spline);
     double modelLength = getModelLength(modelData);
 
@@ -142,17 +147,29 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
 
     // calculate which point goes with which joint
     Node root = modelData->model();
+
     Node frame;
 
+    // maps points from user drawn curve -- now a spline -- to the joints in the model
     vector<int> correspondingPoints = mapPoints(root, pointsPerFrame, modelLength);
+
+    // go through every point in spline
+    // iterating by 1 every time gives us frames overlapping points in the spline
     for (int i = 0; i < spline.size() - pointsPerFrame; i++) {
         int index = 0;
+        // move model and its joints
         frame = jointsToSpline(root, spline, correspondingPoints, index);
+
+        // go through the mapped joints on the model and move them up by 1
+        // since we are on a new frame
         vector<int> newCorresponding;
         for (int j = 0; j < correspondingPoints.size(); j++) {
             newCorresponding.push_back(correspondingPoints.at(j)+1);
         }
+        // copy for the next iteration 
         correspondingPoints = newCorresponding;
+
+        // add frames to the animation
         Node* a = animation->add_frames();
         a->CopyFrom(frame);
     }
@@ -160,7 +177,7 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     return animation;
 }
 
-// returns an Animation object to send back to Unity
+/* returns an Animation object to send back to Unity */
 Animation* getFrames(ModelData* modelData) {
 	Node model = modelData->model();
 	Animation* animation = new Animation();
