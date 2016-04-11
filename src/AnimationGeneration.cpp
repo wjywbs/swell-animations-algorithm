@@ -177,6 +177,16 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     return animation;
 }
 
+void copySplineToAnimation(vector<struct pt*> spline, Animation* animation){
+	for (int x = 0; x < spline.size(); x++){
+		struct pt* p = spline.at(x);
+		Vector* vector = animation->add_spline();
+		vector->set_x(p->x);
+		vector->set_y(p->y);
+		vector->set_z(p->z);
+	}
+}
+
 /* returns an Animation object to send back to Unity */
 Animation* getFrames(ModelData* modelData) {
 	Node model = modelData->model();
@@ -185,7 +195,8 @@ Animation* getFrames(ModelData* modelData) {
     vector<struct pt*> spline = getSpline(modelData);
     // evaluateDLOA
     animation = evaluateDLOA(modelData, spline);
-
+	//set the spline in the return animation
+	copySplineToAnimation(spline, animation);
 	return animation;
 }
 
