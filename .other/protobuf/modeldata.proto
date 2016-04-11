@@ -4,17 +4,25 @@ package swellanimations;
 
 message Animation {
 	repeated Node frames = 1;
-	optional int32 framesPerSecond = 2;
+	repeated Vector spline = 2;
+}
+
+message ModelData {
+	optional Node model = 1;
+	optional Vector upVector = 2;
+	repeated Vector controlPoints = 3;
+}
+
+message Vector {
+	required float x = 1;
+	required float y = 2;
+	required float z = 3;
 }
 
 message Node {
 	optional string name = 1;
-	optional float positionX = 2;
-	optional float positionY = 3;
-	optional float positionZ = 4;
-	optional float rotationX = 5;
-	optional float rotationY = 6;
-	optional float rotationZ = 7;
-	repeated Node children = 8;
-	optional Node parent = 9;
+	optional Vector position = 2;
+	optional Vector eularAngles = 3;
+	repeated Node children = 4;
+	optional Node parent = 5;
 }

@@ -184,10 +184,19 @@ class ModelData : public ::google::protobuf::Message {
   inline ::swellanimations::Node* release_model();
   inline void set_allocated_model(::swellanimations::Node* model);
 
-  // repeated .swellanimations.Vector controlPoints = 2;
+  // optional .swellanimations.Vector upVector = 2;
+  inline bool has_upvector() const;
+  inline void clear_upvector();
+  static const int kUpVectorFieldNumber = 2;
+  inline const ::swellanimations::Vector& upvector() const;
+  inline ::swellanimations::Vector* mutable_upvector();
+  inline ::swellanimations::Vector* release_upvector();
+  inline void set_allocated_upvector(::swellanimations::Vector* upvector);
+
+  // repeated .swellanimations.Vector controlPoints = 3;
   inline int controlpoints_size() const;
   inline void clear_controlpoints();
-  static const int kControlPointsFieldNumber = 2;
+  static const int kControlPointsFieldNumber = 3;
   inline const ::swellanimations::Vector& controlpoints(int index) const;
   inline ::swellanimations::Vector* mutable_controlpoints(int index);
   inline ::swellanimations::Vector* add_controlpoints();
@@ -200,12 +209,15 @@ class ModelData : public ::google::protobuf::Message {
  private:
   inline void set_has_model();
   inline void clear_has_model();
+  inline void set_has_upvector();
+  inline void clear_has_upvector();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::swellanimations::Node* model_;
+  ::swellanimations::Vector* upvector_;
   ::google::protobuf::RepeatedPtrField< ::swellanimations::Vector > controlpoints_;
   friend void  protobuf_AddDesc_AnimationDataSerializer_2fmodeldata_2eproto();
   friend void protobuf_AssignDesc_AnimationDataSerializer_2fmodeldata_2eproto();
@@ -528,7 +540,48 @@ inline void ModelData::set_allocated_model(::swellanimations::Node* model) {
   // @@protoc_insertion_point(field_set_allocated:swellanimations.ModelData.model)
 }
 
-// repeated .swellanimations.Vector controlPoints = 2;
+// optional .swellanimations.Vector upVector = 2;
+inline bool ModelData::has_upvector() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ModelData::set_has_upvector() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ModelData::clear_has_upvector() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ModelData::clear_upvector() {
+  if (upvector_ != NULL) upvector_->::swellanimations::Vector::Clear();
+  clear_has_upvector();
+}
+inline const ::swellanimations::Vector& ModelData::upvector() const {
+  // @@protoc_insertion_point(field_get:swellanimations.ModelData.upVector)
+  return upvector_ != NULL ? *upvector_ : *default_instance_->upvector_;
+}
+inline ::swellanimations::Vector* ModelData::mutable_upvector() {
+  set_has_upvector();
+  if (upvector_ == NULL) upvector_ = new ::swellanimations::Vector;
+  // @@protoc_insertion_point(field_mutable:swellanimations.ModelData.upVector)
+  return upvector_;
+}
+inline ::swellanimations::Vector* ModelData::release_upvector() {
+  clear_has_upvector();
+  ::swellanimations::Vector* temp = upvector_;
+  upvector_ = NULL;
+  return temp;
+}
+inline void ModelData::set_allocated_upvector(::swellanimations::Vector* upvector) {
+  delete upvector_;
+  upvector_ = upvector;
+  if (upvector) {
+    set_has_upvector();
+  } else {
+    clear_has_upvector();
+  }
+  // @@protoc_insertion_point(field_set_allocated:swellanimations.ModelData.upVector)
+}
+
+// repeated .swellanimations.Vector controlPoints = 3;
 inline int ModelData::controlpoints_size() const {
   return controlpoints_.size();
 }

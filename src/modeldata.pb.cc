@@ -2,7 +2,7 @@
 // source: AnimationDataSerializer/modeldata.proto
 
 #define INTERNAL_SUPPRESS_PROTOBUF_FIELD_DEPRECATION
-#include "modeldata.pb.h"
+#include "../include/modeldata.pb.h"
 
 #include <algorithm>
 
@@ -58,8 +58,9 @@ void protobuf_AssignDesc_AnimationDataSerializer_2fmodeldata_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Animation));
   ModelData_descriptor_ = file->message_type(1);
-  static const int ModelData_offsets_[2] = {
+  static const int ModelData_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelData, model_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelData, upvector_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelData, controlpoints_),
   };
   ModelData_reflection_ =
@@ -153,16 +154,17 @@ void protobuf_AddDesc_AnimationDataSerializer_2fmodeldata_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\'AnimationDataSerializer/modeldata.prot"
     "o\022\017swellanimations\"2\n\tAnimation\022%\n\006frame"
-    "s\030\001 \003(\0132\025.swellanimations.Node\"a\n\tModelD"
-    "ata\022$\n\005model\030\001 \001(\0132\025.swellanimations.Nod"
-    "e\022.\n\rcontrolPoints\030\002 \003(\0132\027.swellanimatio"
-    "ns.Vector\")\n\006Vector\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002("
-    "\002\022\t\n\001z\030\003 \002(\002\"\275\001\n\004Node\022\014\n\004name\030\001 \001(\t\022)\n\010p"
-    "osition\030\002 \001(\0132\027.swellanimations.Vector\022,"
-    "\n\013eularAngles\030\003 \001(\0132\027.swellanimations.Ve"
-    "ctor\022\'\n\010children\030\004 \003(\0132\025.swellanimations"
-    ".Node\022%\n\006parent\030\005 \001(\0132\025.swellanimations."
-    "Node", 444);
+    "s\030\001 \003(\0132\025.swellanimations.Node\"\214\001\n\tModel"
+    "Data\022$\n\005model\030\001 \001(\0132\025.swellanimations.No"
+    "de\022)\n\010upVector\030\002 \001(\0132\027.swellanimations.V"
+    "ector\022.\n\rcontrolPoints\030\003 \003(\0132\027.swellanim"
+    "ations.Vector\")\n\006Vector\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030"
+    "\002 \002(\002\022\t\n\001z\030\003 \002(\002\"\275\001\n\004Node\022\014\n\004name\030\001 \001(\t\022"
+    ")\n\010position\030\002 \001(\0132\027.swellanimations.Vect"
+    "or\022,\n\013eularAngles\030\003 \001(\0132\027.swellanimation"
+    "s.Vector\022\'\n\010children\030\004 \003(\0132\025.swellanimat"
+    "ions.Node\022%\n\006parent\030\005 \001(\0132\025.swellanimati"
+    "ons.Node", 488);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "AnimationDataSerializer/modeldata.proto", &protobuf_RegisterTypes);
   Animation::default_instance_ = new Animation();
@@ -407,6 +409,7 @@ void Animation::Swap(Animation* other) {
 
 #ifndef _MSC_VER
 const int ModelData::kModelFieldNumber;
+const int ModelData::kUpVectorFieldNumber;
 const int ModelData::kControlPointsFieldNumber;
 #endif  // !_MSC_VER
 
@@ -418,6 +421,7 @@ ModelData::ModelData()
 
 void ModelData::InitAsDefaultInstance() {
   model_ = const_cast< ::swellanimations::Node*>(&::swellanimations::Node::default_instance());
+  upvector_ = const_cast< ::swellanimations::Vector*>(&::swellanimations::Vector::default_instance());
 }
 
 ModelData::ModelData(const ModelData& from)
@@ -430,6 +434,7 @@ ModelData::ModelData(const ModelData& from)
 void ModelData::SharedCtor() {
   _cached_size_ = 0;
   model_ = NULL;
+  upvector_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -441,6 +446,7 @@ ModelData::~ModelData() {
 void ModelData::SharedDtor() {
   if (this != default_instance_) {
     delete model_;
+    delete upvector_;
   }
 }
 
@@ -466,8 +472,13 @@ ModelData* ModelData::New() const {
 }
 
 void ModelData::Clear() {
-  if (has_model()) {
-    if (model_ != NULL) model_->::swellanimations::Node::Clear();
+  if (_has_bits_[0 / 32] & 3) {
+    if (has_model()) {
+      if (model_ != NULL) model_->::swellanimations::Node::Clear();
+    }
+    if (has_upvector()) {
+      if (upvector_ != NULL) upvector_->::swellanimations::Vector::Clear();
+    }
   }
   controlpoints_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -492,20 +503,33 @@ bool ModelData::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_controlPoints;
+        if (input->ExpectTag(18)) goto parse_upVector;
         break;
       }
 
-      // repeated .swellanimations.Vector controlPoints = 2;
+      // optional .swellanimations.Vector upVector = 2;
       case 2: {
         if (tag == 18) {
+         parse_upVector:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_upvector()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(26)) goto parse_controlPoints;
+        break;
+      }
+
+      // repeated .swellanimations.Vector controlPoints = 3;
+      case 3: {
+        if (tag == 26) {
          parse_controlPoints:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_controlpoints()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_controlPoints;
+        if (input->ExpectTag(26)) goto parse_controlPoints;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -541,10 +565,16 @@ void ModelData::SerializeWithCachedSizes(
       1, this->model(), output);
   }
 
-  // repeated .swellanimations.Vector controlPoints = 2;
+  // optional .swellanimations.Vector upVector = 2;
+  if (has_upvector()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->upvector(), output);
+  }
+
+  // repeated .swellanimations.Vector controlPoints = 3;
   for (int i = 0; i < this->controlpoints_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->controlpoints(i), output);
+      3, this->controlpoints(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -564,11 +594,18 @@ void ModelData::SerializeWithCachedSizes(
         1, this->model(), target);
   }
 
-  // repeated .swellanimations.Vector controlPoints = 2;
+  // optional .swellanimations.Vector upVector = 2;
+  if (has_upvector()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->upvector(), target);
+  }
+
+  // repeated .swellanimations.Vector controlPoints = 3;
   for (int i = 0; i < this->controlpoints_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        2, this->controlpoints(i), target);
+        3, this->controlpoints(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -590,8 +627,15 @@ int ModelData::ByteSize() const {
           this->model());
     }
 
+    // optional .swellanimations.Vector upVector = 2;
+    if (has_upvector()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->upvector());
+    }
+
   }
-  // repeated .swellanimations.Vector controlPoints = 2;
+  // repeated .swellanimations.Vector controlPoints = 3;
   total_size += 1 * this->controlpoints_size();
   for (int i = 0; i < this->controlpoints_size(); i++) {
     total_size +=
@@ -629,6 +673,9 @@ void ModelData::MergeFrom(const ModelData& from) {
     if (from.has_model()) {
       mutable_model()->::swellanimations::Node::MergeFrom(from.model());
     }
+    if (from.has_upvector()) {
+      mutable_upvector()->::swellanimations::Vector::MergeFrom(from.upvector());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -650,6 +697,9 @@ bool ModelData::IsInitialized() const {
   if (has_model()) {
     if (!this->model().IsInitialized()) return false;
   }
+  if (has_upvector()) {
+    if (!this->upvector().IsInitialized()) return false;
+  }
   if (!::google::protobuf::internal::AllAreInitialized(this->controlpoints())) return false;
   return true;
 }
@@ -657,6 +707,7 @@ bool ModelData::IsInitialized() const {
 void ModelData::Swap(ModelData* other) {
   if (other != this) {
     std::swap(model_, other->model_);
+    std::swap(upvector_, other->upvector_);
     controlpoints_.Swap(&other->controlpoints_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
