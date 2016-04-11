@@ -8,8 +8,8 @@
 #include <sstream>
 #include <string.h>
 #include <vector>
-#include "..\include\modeldata.pb.h"
-#include "..\include\point.h"
+#include "modeldata.pb.h"
+#include "point.h"
 #include "hermite.cpp"
 
 using namespace swellanimations;

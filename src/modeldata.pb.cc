@@ -2,7 +2,7 @@
 // source: AnimationDataSerializer/modeldata.proto
 
 #define INTERNAL_SUPPRESS_PROTOBUF_FIELD_DEPRECATION
-#include "../include/modeldata.pb.h"
+#include "modeldata.pb.h"
 
 #include <algorithm>
 
