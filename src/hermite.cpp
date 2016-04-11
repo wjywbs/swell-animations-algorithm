@@ -11,7 +11,7 @@
 #include "../include/point.h"
 
 struct pt *createPoint(double x, double y, double z) {
-	struct pt *newPoint = (pt*)malloc(sizeof(struct pt));
+	struct pt *newPoint = (pt*) malloc(sizeof(struct pt));
 	newPoint->x = x;
 	newPoint->y = y;
 	newPoint->z = z;
@@ -53,13 +53,11 @@ double getDistance(const struct pt *l, const struct pt *r) {
 	return sqrt(pow(x,2) + pow(y,2) + pow(z,2));
 }
 
-
 /* One sided diff */
 struct pt *forwardDiff(const struct pt *a, const struct pt *b)
 {
 	struct pt *tmp = minus(b, a);
-	tmp = multScalar(3, tmp);
-	return tmp;
+	return multScalar(3, tmp);
 }
 
 /* Three point diff */
@@ -73,8 +71,7 @@ struct pt *midpointDiff(const struct pt *a, const struct pt *b, const struct pt 
 	struct pt *term2 = multScalar(offset, minus(b, a));
 
 	// Define the result value
-	struct pt *result = add(term1, term2);
-	return result;
+  return add(term1, term2);
 }
 
 double hermiteBasis00(double t) {
@@ -96,9 +93,7 @@ double hermiteBasis11(double t) {
 struct pt *hermite(const double t, const struct pt *p0, const struct pt *m0, const struct pt *p1, const struct pt *m1) {
 	struct pt *result;
 
-	result = add(add(multScalar(hermiteBasis00(t), p0), multScalar(hermiteBasis10(t), m0)), add(multScalar(hermiteBasis01(t), p1), multScalar(hermiteBasis11(t), m1)));
-
-	return result;
+	return add(add(multScalar(hermiteBasis00(t), p0), multScalar(hermiteBasis10(t), m0)), add(multScalar(hermiteBasis01(t), p1), multScalar(hermiteBasis11(t), m1)));
 }
 
 /* Display a point to the screen */
