@@ -59,10 +59,11 @@ void protobuf_AssignDesc_AnimationDataSerializer_2fmodeldata_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Animation));
   ModelData_descriptor_ = file->message_type(1);
-  static const int ModelData_offsets_[3] = {
+  static const int ModelData_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelData, model_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelData, upvector_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelData, controlpoints_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelData, numberofframes_),
   };
   ModelData_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -156,17 +157,17 @@ void protobuf_AddDesc_AnimationDataSerializer_2fmodeldata_2eproto() {
     "\n\'AnimationDataSerializer/modeldata.prot"
     "o\022\017swellanimations\"[\n\tAnimation\022%\n\006frame"
     "s\030\001 \003(\0132\025.swellanimations.Node\022\'\n\006spline"
-    "\030\002 \003(\0132\027.swellanimations.Vector\"\214\001\n\tMode"
+    "\030\002 \003(\0132\027.swellanimations.Vector\"\244\001\n\tMode"
     "lData\022$\n\005model\030\001 \001(\0132\025.swellanimations.N"
     "ode\022)\n\010upVector\030\002 \001(\0132\027.swellanimations."
     "Vector\022.\n\rcontrolPoints\030\003 \003(\0132\027.swellani"
-    "mations.Vector\")\n\006Vector\022\t\n\001x\030\001 \002(\002\022\t\n\001y"
-    "\030\002 \002(\002\022\t\n\001z\030\003 \002(\002\"\275\001\n\004Node\022\014\n\004name\030\001 \001(\t"
-    "\022)\n\010position\030\002 \001(\0132\027.swellanimations.Vec"
-    "tor\022,\n\013eularAngles\030\003 \001(\0132\027.swellanimatio"
-    "ns.Vector\022\'\n\010children\030\004 \003(\0132\025.swellanima"
-    "tions.Node\022%\n\006parent\030\005 \001(\0132\025.swellanimat"
-    "ions.Node", 529);
+    "mations.Vector\022\026\n\016numberOfFrames\030\004 \001(\005\")"
+    "\n\006Vector\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\022\t\n\001z\030\003 \002("
+    "\002\"\275\001\n\004Node\022\014\n\004name\030\001 \001(\t\022)\n\010position\030\002 \001"
+    "(\0132\027.swellanimations.Vector\022,\n\013eularAngl"
+    "es\030\003 \001(\0132\027.swellanimations.Vector\022\'\n\010chi"
+    "ldren\030\004 \003(\0132\025.swellanimations.Node\022%\n\006pa"
+    "rent\030\005 \001(\0132\025.swellanimations.Node", 553);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "AnimationDataSerializer/modeldata.proto", &protobuf_RegisterTypes);
   Animation::default_instance_ = new Animation();
@@ -453,6 +454,7 @@ void Animation::Swap(Animation* other) {
 const int ModelData::kModelFieldNumber;
 const int ModelData::kUpVectorFieldNumber;
 const int ModelData::kControlPointsFieldNumber;
+const int ModelData::kNumberOfFramesFieldNumber;
 #endif  // !_MSC_VER
 
 ModelData::ModelData()
@@ -477,6 +479,7 @@ void ModelData::SharedCtor() {
   _cached_size_ = 0;
   model_ = NULL;
   upvector_ = NULL;
+  numberofframes_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -514,13 +517,14 @@ ModelData* ModelData::New() const {
 }
 
 void ModelData::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
+  if (_has_bits_[0 / 32] & 11) {
     if (has_model()) {
       if (model_ != NULL) model_->::swellanimations::Node::Clear();
     }
     if (has_upvector()) {
       if (upvector_ != NULL) upvector_->::swellanimations::Vector::Clear();
     }
+    numberofframes_ = 0;
   }
   controlpoints_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -572,6 +576,21 @@ bool ModelData::MergePartialFromCodedStream(
           goto handle_unusual;
         }
         if (input->ExpectTag(26)) goto parse_controlPoints;
+        if (input->ExpectTag(32)) goto parse_numberOfFrames;
+        break;
+      }
+
+      // optional int32 numberOfFrames = 4;
+      case 4: {
+        if (tag == 32) {
+         parse_numberOfFrames:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &numberofframes_)));
+          set_has_numberofframes();
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -619,6 +638,11 @@ void ModelData::SerializeWithCachedSizes(
       3, this->controlpoints(i), output);
   }
 
+  // optional int32 numberOfFrames = 4;
+  if (has_numberofframes()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->numberofframes(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -650,6 +674,11 @@ void ModelData::SerializeWithCachedSizes(
         3, this->controlpoints(i), target);
   }
 
+  // optional int32 numberOfFrames = 4;
+  if (has_numberofframes()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->numberofframes(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -674,6 +703,13 @@ int ModelData::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->upvector());
+    }
+
+    // optional int32 numberOfFrames = 4;
+    if (has_numberofframes()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->numberofframes());
     }
 
   }
@@ -718,6 +754,9 @@ void ModelData::MergeFrom(const ModelData& from) {
     if (from.has_upvector()) {
       mutable_upvector()->::swellanimations::Vector::MergeFrom(from.upvector());
     }
+    if (from.has_numberofframes()) {
+      set_numberofframes(from.numberofframes());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -751,6 +790,7 @@ void ModelData::Swap(ModelData* other) {
     std::swap(model_, other->model_);
     std::swap(upvector_, other->upvector_);
     controlpoints_.Swap(&other->controlpoints_);
+    std::swap(numberofframes_, other->numberofframes_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

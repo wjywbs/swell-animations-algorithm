@@ -22,7 +22,9 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
     // TODO: check for self intersection of line
     // idea: check if any two control points have the exact same position
     // get indices of mutable_controlpoints for each of the 4 new control points
-    int start, second, third, end;
+    int start, second, third, end, numberOfFrames;
+
+	numberOfFrames = modelData->numberofframes();
 
     /*
     // point p0

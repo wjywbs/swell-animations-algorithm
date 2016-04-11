@@ -218,12 +218,21 @@ class ModelData : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::swellanimations::Vector >*
       mutable_controlpoints();
 
+  // optional int32 numberOfFrames = 4;
+  inline bool has_numberofframes() const;
+  inline void clear_numberofframes();
+  static const int kNumberOfFramesFieldNumber = 4;
+  inline ::google::protobuf::int32 numberofframes() const;
+  inline void set_numberofframes(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:swellanimations.ModelData)
  private:
   inline void set_has_model();
   inline void clear_has_model();
   inline void set_has_upvector();
   inline void clear_has_upvector();
+  inline void set_has_numberofframes();
+  inline void clear_has_numberofframes();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -232,6 +241,7 @@ class ModelData : public ::google::protobuf::Message {
   ::swellanimations::Node* model_;
   ::swellanimations::Vector* upvector_;
   ::google::protobuf::RepeatedPtrField< ::swellanimations::Vector > controlpoints_;
+  ::google::protobuf::int32 numberofframes_;
   friend void  protobuf_AddDesc_AnimationDataSerializer_2fmodeldata_2eproto();
   friend void protobuf_AssignDesc_AnimationDataSerializer_2fmodeldata_2eproto();
   friend void protobuf_ShutdownFile_AnimationDataSerializer_2fmodeldata_2eproto();
@@ -652,6 +662,30 @@ inline ::google::protobuf::RepeatedPtrField< ::swellanimations::Vector >*
 ModelData::mutable_controlpoints() {
   // @@protoc_insertion_point(field_mutable_list:swellanimations.ModelData.controlPoints)
   return &controlpoints_;
+}
+
+// optional int32 numberOfFrames = 4;
+inline bool ModelData::has_numberofframes() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ModelData::set_has_numberofframes() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ModelData::clear_has_numberofframes() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ModelData::clear_numberofframes() {
+  numberofframes_ = 0;
+  clear_has_numberofframes();
+}
+inline ::google::protobuf::int32 ModelData::numberofframes() const {
+  // @@protoc_insertion_point(field_get:swellanimations.ModelData.numberOfFrames)
+  return numberofframes_;
+}
+inline void ModelData::set_numberofframes(::google::protobuf::int32 value) {
+  set_has_numberofframes();
+  numberofframes_ = value;
+  // @@protoc_insertion_point(field_set:swellanimations.ModelData.numberOfFrames)
 }
 
 // -------------------------------------------------------------------
