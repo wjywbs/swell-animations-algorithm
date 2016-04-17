@@ -14,6 +14,3 @@ maclocal:
 
 clean:
 	@rm -f *.exe *.o *.dll *.bundle *.so* *.dylib loader
-
-clean:
-	rm AnimationGeneration
