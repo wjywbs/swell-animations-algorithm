@@ -1,6 +1,6 @@
 // AnimationGeneration.cpp - backend animation generation functions
 // Author: Sarah
-// Date last updated: 04/03/2016
+// Date last updated: 04/18/2016
 //
 
 #include <iostream>
@@ -55,7 +55,7 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
         }
         else
         {
-            Vector* p00Vec = modelData->mutable_controlpoints(i-2);
+            Vector* p00Vec = modelData->mutable_controlpoints(i-1);
             struct pt* p00 = createPoint((double)p00Vec->x(), (double)p00Vec->y(), (double)p00Vec->z()); 
             Vector* p2Vec = modelData->mutable_controlpoints(i+2);
             struct pt* p2 = createPoint((double)p2Vec->x(), (double)p2Vec->y(), (double)p2Vec->z()); 
@@ -63,10 +63,11 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
             m1 = midpointDiff(p0, p1, p2);
         }
 
-        for (double t = 0; t < 1; t+=0.1) {
+        for (double t = 0; t < 1; t+=0.5) {
             struct pt* r = hermite(t, p0, m0, p1, m1);
             v.push_back(r);
         }
+    }
 
     return v;
 }
