@@ -1,10 +1,20 @@
-## Swell-Animations Algorithm
+# Swell-Animations Algorithm
 This repo contains the backend which will generate the animation.
 
-### Usage:
-#### Linux
-* Building: make build
-* Build protobuf files if missing/outdated: make protobuf-cpp
+## Usage:
+##### Linux
+* Building
+	```
+	make
+	```
+* Unit testing 
+	```
+	make test
+	```
+* Build protobuf files if missing/outdated
+	```
+	make protobuf-cpp
+	```
 
-### Builds:
+## Builds:
 https://vps73020.vps.ovh.ca:8443/job/backend/ws/bin/
