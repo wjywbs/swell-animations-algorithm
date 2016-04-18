@@ -26,33 +26,47 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
 
 	numberOfFrames = modelData->numberofframes();
 
-    /*
-    // point p0
-    Vector* a = modelData->mutable_controlpoints(start);
-    struct pt* p0 = createPoint((double)a->x(), (double)a->y(), (double)a->z());
-    // point m0
-    Vector* b = modelData->mutable_controlpoints(second);
-    struct pt* m0 = createPoint((double)b->x(), (double)b->y(), (double)b->z());
-    // point p1
-    Vector* c = modelData->mutable_controlpoints(third);
-    struct pt* p1 = createPoint((double)c->x(), (double)c->y(), (double)c->z());
-    //point m1
-    Vector* d = modelData->mutable_controlpoints(end);
-    struct pt* m1 = createPoint((double)d->x(), (double)d->y(), (double)d->z());
-    // call hermite with these points
-    for (double t = 0; t < 1; t+=0.1) {
-        struct pt* r = hermite(t, p0, m0, p1, m1);
-        v.push_back(r);
-    }
-    */
-
     // if line contains no self intersections
     // get user drawn curve from frontend and store in a vector
-    for (int i = 0; i < modelData->controlpoints_size(); i++) {
-        Vector* tmp = modelData->mutable_controlpoints(i);
-        struct pt* point = createPoint((double)tmp->x(), (double)tmp->y(), (double)tmp->z());
-        v.push_back(point);
-    }
+    //
+    //
+    for (int i = 0; i < modelData->controlpoints_size()-1; i++) {
+        Vector* p0Vec = modelData->mutable_controlpoints(i);
+        Vector* p1Vec = modelData->mutable_controlpoints(i+1);
+
+        struct pt* p0 = createPoint((double)p0Vec->x(), (double)p0Vec->y(), (double)p0Vec->z()); 
+        struct pt* p1 = createPoint((double)p1Vec->x(), (double)p1Vec->y(), (double)p1Vec->z()); 
+        struct pt* m0;
+        struct pt* m1;
+
+        if(i == 0)
+        {
+            Vector* p2Vec = modelData->mutable_controlpoints(i+2);
+            struct pt* p2 = createPoint((double)p2Vec->x(), (double)p2Vec->y(), (double)p2Vec->z()); 
+            m0 = forwardDiff(p0, p1);
+            m1 = midpointDiff(p0, p1, p2);
+        }
+        else if(i == modelData->controlpoints_size()-2)
+        {
+            Vector* p2Vec = modelData->mutable_controlpoints(i-2);
+            struct pt* p2 = createPoint((double)p2Vec->x(), (double)p2Vec->y(), (double)p2Vec->z()); 
+            m1 = forwardDiff(p0, p1);
+            m0 = midpointDiff(p2, p0, p1);
+        }
+        else
+        {
+            Vector* p00Vec = modelData->mutable_controlpoints(i-2);
+            struct pt* p00 = createPoint((double)p00Vec->x(), (double)p00Vec->y(), (double)p00Vec->z()); 
+            Vector* p2Vec = modelData->mutable_controlpoints(i+2);
+            struct pt* p2 = createPoint((double)p2Vec->x(), (double)p2Vec->y(), (double)p2Vec->z()); 
+            m0 = midpointDiff(p00, p0, p1);
+            m1 = midpointDiff(p0, p1, p2);
+        }
+
+        for (double t = 0; t < 1; t+=0.1) {
+            struct pt* r = hermite(t, p0, m0, p1, m1);
+            v.push_back(r);
+        }
 
     return v;
 }
