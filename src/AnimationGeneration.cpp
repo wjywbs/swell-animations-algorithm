@@ -1,6 +1,6 @@
 // AnimationGeneration.cpp - backend animation generation functions
 // Author: Sarah
-// Date last updated: 04/03/2016
+// Date last updated: 04/18/2016
 //
 
 #include <iostream>
@@ -67,6 +67,7 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
             struct pt* r = hermite(t, p0, m0, p1, m1);
             v.push_back(r);
         }
+    }
 
     return v;
 }
