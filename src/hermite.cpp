@@ -1,10 +1,3 @@
-/**
- * To compile, type the following:
- * g++ hermite.cpp -o hermite -lm
- *
- * We must manually link the math library to make use of the pow function
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -101,7 +94,7 @@ void displayPoint(const struct pt *point) {
 	printf("(%f, %f, %f)\n", point->x, point->y, point->z);
 }
 
-int main(int argc, char *argv[])
+/*int main(int argc, char *argv[])
 {
 	struct pt *a = createPoint(1, 1, 1);
 	struct pt *b = createPoint(2, 3, 1);
@@ -112,4 +105,4 @@ int main(int argc, char *argv[])
 	free(b);
 	free(c);
 	return 0;
-}
+}*/
