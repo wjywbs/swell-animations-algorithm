@@ -63,7 +63,7 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
             m1 = midpointDiff(p0, p1, p2);
         }
 
-        for (double t = 0; t < 1; t+=0.1) {
+        for (double t = 0; t < 1; t+=0.5) {
             struct pt* r = hermite(t, p0, m0, p1, m1);
             v.push_back(r);
         }
