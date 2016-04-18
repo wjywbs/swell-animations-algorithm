@@ -55,7 +55,7 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
         }
         else
         {
-            Vector* p00Vec = modelData->mutable_controlpoints(i-2);
+            Vector* p00Vec = modelData->mutable_controlpoints(i-1);
             struct pt* p00 = createPoint((double)p00Vec->x(), (double)p00Vec->y(), (double)p00Vec->z()); 
             Vector* p2Vec = modelData->mutable_controlpoints(i+2);
             struct pt* p2 = createPoint((double)p2Vec->x(), (double)p2Vec->y(), (double)p2Vec->z()); 
