@@ -93,16 +93,3 @@ struct pt *hermite(const double t, const struct pt *p0, const struct pt *m0, con
 void displayPoint(const struct pt *point) {
 	printf("(%f, %f, %f)\n", point->x, point->y, point->z);
 }
-
-/*int main(int argc, char *argv[])
-{
-	struct pt *a = createPoint(1, 1, 1);
-	struct pt *b = createPoint(2, 3, 1);
-	struct pt *c = minus(a, b);
-	displayPoint(c);
-
-	free(a);
-	free(b);
-	free(c);
-	return 0;
-}*/
