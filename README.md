@@ -18,3 +18,6 @@ make protobuf-cpp
 
 ## Builds:
 https://vps73020.vps.ovh.ca:8443/job/backend/ws/bin/
+
+## Jenkins unit test:
+https://vps73020.vps.ovh.ca:8443/job/backend-unit-test/
