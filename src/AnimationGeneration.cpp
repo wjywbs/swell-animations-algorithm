@@ -22,7 +22,7 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
     // TODO: check for self intersection of line
     // idea: check if any two control points have the exact same position
     // get indices of mutable_controlpoints for each of the 4 new control points
-    int start, second, third, end, numberOfFrames;
+    int numberOfFrames;
 
 	numberOfFrames = modelData->numberofframes();
 
@@ -63,7 +63,8 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
             m1 = midpointDiff(p0, p1, p2);
         }
 
-        for (double t = 0; t < 1; t+=0.5) {
+        double inc = 1 / numberOfFrames;
+        for (double t = 0; t < 1; t+=inc) {
             struct pt* r = hermite(t, p0, m0, p1, m1);
             v.push_back(r);
         }
@@ -117,6 +118,10 @@ vector<int> mapPoints(Node root, double pointsPerFrame, double modelLength) {
 Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index) {
     Node frame;
 	frame.set_name(root.name());
+
+    //frame.mutable_eularangles()->set_x(root.eularangles().x());
+    //frame.mutable_eularangles()->set_y(root.eularangles().y());
+    //frame.mutable_eularangles()->set_z(root.eularangles().z());
 
     int c = correspondingPoints.at(index);
     struct pt* s = spline.at(c);
