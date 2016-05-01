@@ -70,6 +70,9 @@ def main():
 	m1 = diff1(*ctrl_pts[n-2:])
 	spline += hermite_spline(p0, m0, p1, m1, resolution)
 
+        for i in range(len(spline)):
+            print spline[i][0], spline[i][1]
+
 	# Plot that shit!
 	plot(spline)
 

@@ -1,5 +1,5 @@
 hermite:
-	g++ hermite.cpp -o hermite -lm
+	gcc hermite.c -o hermite -lm
 
 clean:
 	rm hermite
