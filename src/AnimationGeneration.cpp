@@ -22,10 +22,8 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
     // TODO: check for self intersection of line
     // idea: check if any two control points have the exact same position
     // get indices of mutable_controlpoints for each of the 4 new control points
-    int numberOfFrames;
-
-	numberOfFrames = modelData->numberofframes();
-
+	float frameIncs = modelData->controlpoints_size() / (float) modelData->numberofframes();
+	float currentInc = frameIncs;
     // if line contains no self intersections
     // get user drawn curve from frontend and store in a vector
     //
@@ -63,8 +61,13 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
             m1 = midpointDiff(p0, p1, p2);
         }
 
-        struct pt* r = hermite(0.5, p0, m0, p1, m1);
-        v.push_back(r);
+		if (currentInc < i + 1){
+			for (double t = (currentInc - i + 1); t < 1; t += frameIncs) {
+				struct pt* r = hermite(t, p0, m0, p1, m1);
+				v.push_back(r);
+				currentInc += frameIncs;
+			}
+		}
     }
 
     return v;
