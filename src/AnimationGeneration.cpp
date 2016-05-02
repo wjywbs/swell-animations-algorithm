@@ -11,6 +11,7 @@
 #include "modeldata.pb.h"
 #include "point.h"
 #include "hermite.cpp"
+#include "diff_hermite.c"
 
 using namespace swellanimations;
 using namespace std;
@@ -118,16 +119,69 @@ vector<int> mapPoints(Node root, double pointsPerFrame, double modelLength) {
 Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index) {
     Node frame;
 	frame.set_name(root.name());
-
-    //frame.mutable_eularangles()->set_x(root.eularangles().x());
-    //frame.mutable_eularangles()->set_y(root.eularangles().y());
-    //frame.mutable_eularangles()->set_z(root.eularangles().z());
-
+    
     int c = correspondingPoints.at(index);
     struct pt* s = spline.at(c);
+
+    double x0, x1, x2;
+    double y0, y1, y2;
+    double z0, z1, z2;
+
+    if (c == 0)
+    {
+        x0 = s->x; 
+        y0 = s->y; 
+        z0 = s->z; 
+        x1 = s->x; 
+        y1 = s->y; 
+        z1 = s->z; 
+        struct pt* s2 = spline.at(c+1);
+        x2 = s2->x; 
+        y2 = s2->y; 
+        z2 = s2->z; 
+    }
+    else if (c == spline.size())
+    {
+        struct pt* s0 = spline.at(c-1);
+        x0 = s0->x; 
+        y0 = s0->y; 
+        z0 = s0->z; 
+        x1 = s->x; 
+        y1 = s->y; 
+        z1 = s->z; 
+        x2 = s->x; 
+        y2 = s->y; 
+        z2 = s->z; 
+    }
+    else
+    {
+        struct pt* s0 = spline.at(c-1);
+        struct pt* s2 = spline.at(c+1);
+        x0 = s0->x; 
+        y0 = s0->y; 
+        z0 = s0->z; 
+        x1 = s->x; 
+        y1 = s->y; 
+        z1 = s->z; 
+        x2 = s2->x; 
+        y2 = s2->y; 
+        z2 = s2->z; 
+    
+    }
+    double t = 0.5;
+    struct Direction *d = (Direction*)calloc(1, sizeof(struct Direction));
+    Differentiate(x0, x1, x2, t, &(d->x));
+    Differentiate(y0, y1, y2, t, &(d->y));
+    Differentiate(z0, z1, z2, t, &(d->z));
+
     frame.mutable_position()->set_x(s->x);
     frame.mutable_position()->set_y(s->y);
     frame.mutable_position()->set_z(s->z);
+
+    frame.mutable_eularangles()->set_x(d->x);
+    frame.mutable_eularangles()->set_y(d->y);
+    frame.mutable_eularangles()->set_z(d->z);
+
     for (int i = 0; i < root.children_size(); i++) {
         Node tmp = jointsToSpline(root.children(i), spline, correspondingPoints, ++index);
         tmp.set_name(root.children(i).name());

@@ -16,7 +16,7 @@ struct Direction {
  * 	a : x0 or y0 or z0
  * 	b : x1 or y1 or z1
  * 	c : x2 or y2 or z2
- * 	t : contant
+ * 	t : constant
  * 	location : pointer to Direction{x, y, or z}
  * Usage:
  * 	struct Direction *d = calloc(1, sizeof(struct Direction));
