@@ -10,7 +10,7 @@ SRCDIR := src/
 INCDIR := include/
 BLDDIR := bin
 
-BUILD_SO   := -shared -o $(BLDDIR)/swell-animations.so
+BUILD_SO   := -g -shared -o $(BLDDIR)/swell-animations.so
 BUILD_DL   := -dynamiclib -arch x86_64 -lprotobuf -o $(BLDDIR)/swell-animations.bundle
 BUILD_TEST := -o $(BLDDIR)/UnitTests
 
