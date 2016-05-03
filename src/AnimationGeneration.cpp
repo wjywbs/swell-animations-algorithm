@@ -118,7 +118,7 @@ vector<int> mapPoints(Node root, double pointsPerFrame, double modelLength) {
 
 /* returns a new tree (frame) with new positions based on the calculated corresponding points in the spline */
 /* when called in succession, it moves the model and all of its joints along the spline */
-Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index, ofstream *myfile) {
+Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index){ //, ofstream *myfile) {
     Node frame;
 	frame.set_name(root.name());
     
@@ -187,12 +187,12 @@ Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspond
     frame.mutable_eularangles()->set_y(d->y);
     frame.mutable_eularangles()->set_z(d->z);
 
-    *myfile << "-- ";
-    *myfile << root.name() << endl;
-    *myfile << frame.mutable_position()->z() << endl;
+    //*myfile << "-- ";
+    //*myfile << root.name() << endl;
+    //*myfile << frame.mutable_position()->z() << endl;
 
     for (int i = 0; i < root.children_size(); i++) {
-        Node tmp = jointsToSpline(root.children(i), spline, correspondingPoints, ++index, myfile);
+        Node tmp = jointsToSpline(root.children(i), spline, correspondingPoints, ++index); //, myfile);
         tmp.set_name(root.children(i).name());
         Node* p = frame.add_children();
         p->CopyFrom(tmp);
@@ -222,8 +222,8 @@ double calculateB(ModelData* modelData, vector<struct pt*> spline) {
 // TODO: get the time it takes the user to draw the LOA, going to need the control points dropped at intervals
 Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     Animation* animation = new Animation();
-    ofstream myfile;
-    myfile.open ("/home/psarahdactyl/Documents/bbfunfunfun.txt");
+    //ofstream myfile;
+    //myfile.open ("/home/psarahdactyl/Documents/bbfunfunfun.txt");
 
     // calculate the constant b
     double b = calculateB(modelData, spline);
@@ -246,7 +246,7 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     for (int i = 0; i < spline.size() - pointsPerFrame; i++) {
         int index = 0;
         // move model and its joints
-        Node frame = jointsToSpline(root, spline, correspondingPoints, index, &myfile);
+        Node frame = jointsToSpline(root, spline, correspondingPoints, index); //, &myfile);
 
         // go through the mapped joints on the model and move them up by 1
         // since we are on a new frame
