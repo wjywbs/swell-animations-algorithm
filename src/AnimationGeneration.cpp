@@ -276,3 +276,42 @@ Animation* getFrames(ModelData* modelData) {
 	return animation;
 }
 
+/* May need someone to double check that I'm using ModelData appropriately since I've never messed around with it before */
+void applyRotationPoints(ModelData* modelData) {
+	Node model = modelData->model();
+
+	// Store the rotation angle values in a vector for later use
+	vector<struct pt*> rotationAngles;
+	struct pt *point = new struct pt;
+	RotationPoint rp;
+
+	// Iterate over each rotation point and calculate the rotation angle for adjustment use in the x, y, and z dimensions
+	for (int i = 0; i < modelData->rotationpoints_size(); i++) {
+		rp = modelData->rotationpoints(i);
+
+		struct pt *point = new struct pt;
+
+		// The model will begin to rotate some specified number of frames before the rotation point- this number is retrieved in the numframes() method
+		point->x = rp.mutable_rotation()->x() / rp.numframes();
+		point->y = rp.mutable_rotation()->y() / rp.numframes();
+		point->z = rp.mutable_rotation()->z() / rp.numframes();
+		rotationAngles.push_back(point);
+	}
+
+	int startframe;
+	int endframe;
+
+	// Iterate over each rotation point, calculating the start frame and end frame
+	for (int i = 0; i < modelData->rotationpoints_size(); i++) {
+		rp = modelData->rotationpoints(i);
+		startframe = rp.startframe();
+		endframe = rp.startframe() + rp.numframes();
+
+		// For each frame between the start and end frame, modify the eular angles by the appropriate value stored in the rotationAngles vector
+		for (int j = startframe; j <= endframe; j++) {
+			model.mutable_eularangles()->set_x(model.mutable_eularangles()->x() + rotationAngles.at(i)->x);
+			model.mutable_eularangles()->set_y(model.mutable_eularangles()->y() + rotationAngles.at(i)->y);
+			model.mutable_eularangles()->set_z(model.mutable_eularangles()->z() + rotationAngles.at(i)->z);
+		}
+	}
+}
