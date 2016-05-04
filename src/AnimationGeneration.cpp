@@ -263,19 +263,6 @@ void copySplineToAnimation(vector<struct pt*> spline, Animation* animation){
 	}
 }
 
-/* returns an Animation object to send back to Unity */
-Animation* getFrames(ModelData* modelData) {
-	Node model = modelData->model();
-	Animation* animation = new Animation();
-    // get hermite spline
-    vector<struct pt*> spline = getSpline(modelData);
-    // evaluateDLOA
-    animation = evaluateDLOA(modelData, spline);
-	//set the spline in the return animation
-	copySplineToAnimation(spline, animation);
-	return animation;
-}
-
 /* May need someone to double check that I'm using ModelData appropriately since I've never messed around with it before */
 void applyRotationPoints(ModelData* modelData) {
 	Node model = modelData->model();
@@ -314,4 +301,18 @@ void applyRotationPoints(ModelData* modelData) {
 			model.mutable_eularangles()->set_z(model.mutable_eularangles()->z() + rotationAngles.at(i)->z);
 		}
 	}
+}
+
+/* returns an Animation object to send back to Unity */
+Animation* getFrames(ModelData* modelData) {
+	Node model = modelData->model();
+	Animation* animation = new Animation();
+    // get hermite spline
+    vector<struct pt*> spline = getSpline(modelData);
+    // evaluateDLOA
+    animation = evaluateDLOA(modelData, spline);
+	applyRotationPoints(modelData);
+	//set the spline in the return animation
+	copySplineToAnimation(spline, animation);
+	return animation;
 }
