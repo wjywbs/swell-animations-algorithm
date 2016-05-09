@@ -283,6 +283,8 @@ Animation* getFrames(ModelData* modelData) {
     vector<struct pt*> spline = getSpline(modelData);
     // evaluateDLOA
     animation = evaluateDLOA(modelData, spline);
+    // apply rotation points to the model data
+    applyRotationPoints(modelData);
 	//set the spline in the return animation
 	copySplineToAnimation(spline, animation);
 	return animation;
