@@ -146,9 +146,9 @@ TEST(hermite_midpointDiff, can_get_midpoint_diff) {
 	pt *point2 = createPoint(4, 1.75, 2);
 	pt *point3 = createPoint(6.4, 13, 2.1);
 	pt *point4 = midpointDiff(point1, point2, point3);
-	ASSERT_EQ(-7.65, point4->x);
-	ASSERT_EQ(9, point4->y);
-	ASSERT_EQ(-10.35, point4->z);
+	ASSERT_TRUE(fabs(-7.65 - (point4->x)) < EPSILON);
+	ASSERT_TRUE(fabs(9 - (point4->y)) < EPSILON);
+	ASSERT_TRUE(fabs(-10.35 - (point4->z)) < EPSILON);
 	free(point1);
 	free(point2);
 	free(point3);
@@ -158,9 +158,9 @@ TEST(hermite_midpointDiff, can_get_midpoint_diff) {
 	point2 = createPoint(3.6, 9.12, 4);
 	point3 = createPoint(7.65, 11, 1.15);
 	point4 = midpointDiff(point1, point2, point3);
-	ASSERT_EQ(15.6, point4->x);
-	ASSERT_EQ(18, point4->y);
-	ASSERT_EQ(6.15, point4->z);
+	ASSERT_TRUE(fabs(15.6 - (point4->x)) < EPSILON);
+	ASSERT_TRUE(fabs(18 - (point4->y)) < EPSILON);
+	ASSERT_TRUE(fabs(6.15 - (point4->z)) < EPSILON);
 	free(point1);
 	free(point2);
 	free(point3);
