@@ -5,7 +5,7 @@
 #include <sstream>
 #include <vector>
 #include <math.h>
-#include "../../include/point.h"
+#include "point.h"
 
 using namespace std;
 
@@ -42,32 +42,8 @@ double GetAngleBetweenVectors(pt a, pt b) {
 	return atan2(b.y - a.y, b.x - a.x);
 }
 
-void testgabv() {
-	pt a;
-	a.x = 7;
-	a.y = 10;
-
-	pt b;
-	b.x = 5;
-	b.y = 6;
-
-	printf("%f\n", GetAngleBetweenVectors(a, b)); //2.03
-}
-
 double DistanceBetweenPoints(pt a, pt b) {
 	    return sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2));
-}
-
-void testdbp() {
-	pt a;
-	a.x = 7;
-	a.y = 10;
-
-	pt b;
-	b.x = 5;
-	b.y = 6;
-
-	printf("%f\n", DistanceBetweenPoints(a, b)); //4.47
 }
 
 pt MovePoint(pt a_spline, pt b_spline, pt a_model, pt b_model) {
@@ -82,16 +58,6 @@ pt MovePoint(pt a_spline, pt b_spline, pt a_model, pt b_model) {
 
 	pt new_variant = {new_x, new_y, 0};
 	return new_variant;
-}
-
-void testmp() {
-	pt a = {7, 10, 0};
-	pt b = {5, 6, 0};
-	pt c = {0, 3, 0};
-	pt d = {0, 2, 0};
-
-	pt result = MovePoint(a, b, c, d);
-	printf("%f, %f\n", result.x, result.y); // -0.447214, 1.105573
 }
 
 vector<pt> Morph(vector<pt> detail, vector<pt> model) {
@@ -111,6 +77,7 @@ vector<pt> Morph(vector<pt> detail, vector<pt> model) {
 	return model;
 }
 
+/*
 int main() {
 	vector<pt> splinepoints = ReadPoints(string("spline.out"));
 	vector<pt> modelpoints = ReadPoints(string("current"));
@@ -122,3 +89,4 @@ int main() {
 
 	return 0;
 }
+*/
