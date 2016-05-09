@@ -154,10 +154,10 @@ TEST(hermite_midpointDiff, can_get_midpoint_diff) {
 	free(point3);
 	free(point4);
 
-	pt *point1 = createPoint(-4, 1, -2);
-	pt *point2 = createPoint(3.6, 9.12, 4);
-	pt *point3 = createPoint(7.65, 11, 1.15);
-	pt *point4 = midpointDiff(point1, point2, point3);
+	point1 = createPoint(-4, 1, -2);
+	point2 = createPoint(3.6, 9.12, 4);
+	point3 = createPoint(7.65, 11, 1.15);
+	point4 = midpointDiff(point1, point2, point3);
 	ASSERT_EQ(15.6, point4->x);
 	ASSERT_EQ(18, point4->y);
 	ASSERT_EQ(6.15, point4->z);
