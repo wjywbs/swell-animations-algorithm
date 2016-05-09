@@ -1,13 +1,15 @@
 // AnimationGeneration.cpp - backend animation generation functions
 // Author: Sarah
-// Date last updated: 04/18/2016
+// Date last updated: 05/03/2016
 //
-
+#include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <stdio.h>
 #include <sstream>
 #include <string.h>
 #include <vector>
+#include <algorithm>
 #include "modeldata.pb.h"
 #include "point.h"
 #include "hermite.cpp"
@@ -116,7 +118,7 @@ vector<int> mapPoints(Node root, double pointsPerFrame, double modelLength) {
 
 /* returns a new tree (frame) with new positions based on the calculated corresponding points in the spline */
 /* when called in succession, it moves the model and all of its joints along the spline */
-Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index) {
+Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index){ //, ofstream *myfile) {
     Node frame;
 	frame.set_name(root.name());
     
@@ -127,36 +129,39 @@ Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspond
     double y0, y1, y2;
     double z0, z1, z2;
 
+    struct pt* s0;
+    struct pt* s2;
+
     if (c == 0)
     {
         x0 = s->x; 
         y0 = s->y; 
         z0 = s->z; 
-        x1 = s->x; 
-        y1 = s->y; 
-        z1 = s->z; 
-        struct pt* s2 = spline.at(c+1);
+        s2 = spline.at(c+1);
+        x1 = (s->x + s2->x) / 2; 
+        y1 = (s->y + s2->y) / 2; 
+        z1 = (s->z + s2->z) / 2; 
         x2 = s2->x; 
         y2 = s2->y; 
         z2 = s2->z; 
     }
-    else if (c == spline.size())
+    else if (c == spline.size()-1)
     {
-        struct pt* s0 = spline.at(c-1);
+        s0 = spline.at(c-1);
         x0 = s0->x; 
         y0 = s0->y; 
         z0 = s0->z; 
-        x1 = s->x; 
-        y1 = s->y; 
-        z1 = s->z; 
+        x1 = (s->x + s0->x) / 2; 
+        y1 = (s->y + s0->y) / 2; 
+        z1 = (s->z + s0->z) / 2; 
         x2 = s->x; 
         y2 = s->y; 
         z2 = s->z; 
     }
     else
     {
-        struct pt* s0 = spline.at(c-1);
-        struct pt* s2 = spline.at(c+1);
+        s0 = spline.at(c-1);
+        s2 = spline.at(c+1);
         x0 = s0->x; 
         y0 = s0->y; 
         z0 = s0->z; 
@@ -182,8 +187,12 @@ Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspond
     frame.mutable_eularangles()->set_y(d->y);
     frame.mutable_eularangles()->set_z(d->z);
 
+    //*myfile << "-- ";
+    //*myfile << root.name() << endl;
+    //*myfile << frame.mutable_position()->z() << endl;
+
     for (int i = 0; i < root.children_size(); i++) {
-        Node tmp = jointsToSpline(root.children(i), spline, correspondingPoints, ++index);
+        Node tmp = jointsToSpline(root.children(i), spline, correspondingPoints, ++index); //, myfile);
         tmp.set_name(root.children(i).name());
         Node* p = frame.add_children();
         p->CopyFrom(tmp);
@@ -213,6 +222,8 @@ double calculateB(ModelData* modelData, vector<struct pt*> spline) {
 // TODO: get the time it takes the user to draw the LOA, going to need the control points dropped at intervals
 Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     Animation* animation = new Animation();
+    //ofstream myfile;
+    //myfile.open ("/home/psarahdactyl/Documents/bbfunfunfun.txt");
 
     // calculate the constant b
     double b = calculateB(modelData, spline);
@@ -224,17 +235,18 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     // calculate which point goes with which joint
     Node root = modelData->model();
 
-    Node frame;
-
     // maps points from user drawn curve -- now a spline -- to the joints in the model
     vector<int> correspondingPoints = mapPoints(root, pointsPerFrame, modelLength);
+    
+    //they are backwards, don't know why but I fixed it
+    reverse(correspondingPoints.begin(), correspondingPoints.end());
 
     // go through every point in spline
     // iterating by 1 every time gives us frames overlapping points in the spline
     for (int i = 0; i < spline.size() - pointsPerFrame; i++) {
         int index = 0;
         // move model and its joints
-        frame = jointsToSpline(root, spline, correspondingPoints, index);
+        Node frame = jointsToSpline(root, spline, correspondingPoints, index); //, &myfile);
 
         // go through the mapped joints on the model and move them up by 1
         // since we are on a new frame
