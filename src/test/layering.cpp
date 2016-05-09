@@ -77,12 +77,11 @@ pt MovePoint(pt a_spline, pt b_spline, pt a_model, pt b_model) {
 
 	double ratio = dist_model/dist_spline;
 
-	double new_x = b_model.x + (cos(theta_spline)*ratio);
-	double new_y = b_model.y + (sin(theta_spline)*ratio);
+	double new_x = b_model.x + (cos(theta_spline));
+	double new_y = b_model.y + (sin(theta_spline));
 
 	pt new_variant = {new_x, new_y, 0};
 	return new_variant;
-
 }
 
 void testmp() {
@@ -92,7 +91,7 @@ void testmp() {
 	pt d = {0, 2, 0};
 
 	pt result = MovePoint(a, b, c, d);
-	printf("%f, %f\n", result.x, result.y); // -0.1, 1.79
+	printf("%f, %f\n", result.x, result.y); // -0.447214, 1.105573
 }
 
 vector<pt> Morph(vector<pt> detail, vector<pt> model) {
@@ -118,7 +117,7 @@ int main() {
 
 	vector<pt> result = Morph(splinepoints, modelpoints);
 	for(int i=0 ; i<result.size(); i++) {
-		printf("%f, %f\n", result[i].x, result[i].y);
+		printf("%f %f\n", result[i].x, result[i].y);
 	}
 
 	return 0;
