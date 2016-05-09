@@ -116,10 +116,10 @@ TEST(hermite_getDistance, can_get_distance) {
 }
 
 TEST(hermite_forwardDiff, can_get_forward_diff) {
-	struct pt *point1 = createPoint(1, 1, 1);
-	struct pt *point2 = createPoint(2, 3, 1);
-	struct pt *point3 = minus(point2, point1);
-	struct pt *point4 = multScalar(3, point3);
+	pt *point1 = createPoint(1, 1, 1);
+	pt *point2 = createPoint(2, 3, 1);
+	pt *point3 = minus(point2, point1);
+	pt *point4 = multScalar(3, point3);
 	ASSERT_EQ(3, point4->x);
 	ASSERT_EQ(6, point4->y);
 	ASSERT_EQ(0, point4->z);
@@ -139,6 +139,52 @@ TEST(hermite_forwardDiff, can_get_forward_diff) {
 	free(point2);
 	free(point3);
 	free(point4);
+}
+
+TEST(hermite_midpointDiff, can_get_midpoint_diff) {
+	pt *point1 = createPoint(11.5, 7, 9);
+	pt *point2 = createPoint(4, 1.75, 2);
+	pt *point3 = createPoint(6.4, 13, 2.1);
+	pt *point4 = midpointDiff(point1, point2, point3);
+	ASSERT_EQ(-7.65, point4->x);
+	ASSERT_EQ(9, point4->y);
+	ASSERT_EQ(-10.35, point4->z);
+	free(point1);
+	free(point2);
+	free(point3);
+	free(point4);
+
+	pt *point1 = createPoint(-4, 1, -2);
+	pt *point2 = createPoint(3.6, 9.12, 4);
+	pt *point3 = createPoint(7.65, 11, 1.15);
+	pt *point4 = midpointDiff(point1, point2, point3);
+	ASSERT_EQ(15.6, point4->x);
+	ASSERT_EQ(18, point4->y);
+	ASSERT_EQ(6.15, point4->z);
+	free(point1);
+	free(point2);
+	free(point3);
+	free(point4);
+}
+
+TEST(hermite_hermiteBasis00, can_get_hermite_basis_00) {
+	double t = 6;
+	double result = hermiteBasis00(t);
+	ASSERT_EQ(325, result);
+
+	t = 7.5;
+	result = hermiteBasis00(t);
+	ASSERT_EQ(676, result);
+}
+
+TEST(hermite_hermiteBasis10, can_get_hermite_basis_10) {
+	double t = 12;
+	double result = hermiteBasis10(t);
+	ASSERT_EQ(1452, result);
+
+	t = 3.5;
+	result = hermiteBasis10(t);
+	ASSERT_EQ(21.875, result);
 }
 
 int main(int argc, char **argv) {
