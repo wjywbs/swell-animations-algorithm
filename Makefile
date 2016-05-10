@@ -19,6 +19,12 @@ EXEC_TEST  := bin/UnitTests
 build:  createBin $(SRCFILES) $(HEADERS)
 	g++ $(BUILD_SO) src/swell-integration.cpp src/modeldata.pb.cc -I$(INCDIR) $(CXXFLAGS_LINUX)
 
+sarah:  createBin $(SRCFILES) $(HEADERS)
+	g++ $(BUILD_SO) src/swell-integration-debug.cpp src/modeldata.pb.cc -I$(INCDIR) $(CXXFLAGS_LINUX)
+
+sarahb: createBin $(SRCFILES) $(HEADERS)
+	g++ -g -o $(BLDDIR)/swell-animations.so src/swell-integration-debug.cpp src/modeldata.pb.cc -I$(INCDIR) `pkg-config --cflags --libs protobuf` -Wl,--no-as-needed -ldl
+
 test: createBin $(SRCFILES) $(HEADERS)
 	g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTests.cpp $(CXXFLAGS_TEST)
 	$(EXEC_TEST)
