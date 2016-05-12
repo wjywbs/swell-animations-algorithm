@@ -46,9 +46,11 @@ void protobuf_AssignDesc_modeldata_2eproto() {
       "modeldata.proto");
   GOOGLE_CHECK(file != NULL);
   Animation_descriptor_ = file->message_type(0);
-  static const int Animation_offsets_[2] = {
+  static const int Animation_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Animation, frames_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Animation, spline_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Animation, errormessage_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Animation, haserror_),
   };
   Animation_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -179,24 +181,25 @@ void protobuf_AddDesc_modeldata_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\017modeldata.proto\022\017swellanimations\"[\n\tAn"
-    "imation\022%\n\006frames\030\001 \003(\0132\025.swellanimation"
-    "s.Node\022\'\n\006spline\030\002 \003(\0132\027.swellanimations"
-    ".Vector\"\334\001\n\tModelData\022$\n\005model\030\001 \001(\0132\025.s"
-    "wellanimations.Node\022)\n\010upVector\030\002 \001(\0132\027."
-    "swellanimations.Vector\022.\n\rcontrolPoints\030"
-    "\003 \003(\0132\027.swellanimations.Vector\0226\n\016rotati"
-    "onpoints\030\004 \003(\0132\036.swellanimations.Rotatio"
-    "nPoint\022\026\n\016numberOfFrames\030\005 \002(\005\")\n\006Vector"
-    "\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\022\t\n\001z\030\003 \002(\002\"\275\001\n\004No"
-    "de\022\014\n\004name\030\001 \001(\t\022)\n\010position\030\002 \001(\0132\027.swe"
-    "llanimations.Vector\022,\n\013eularAngles\030\003 \001(\013"
-    "2\027.swellanimations.Vector\022\'\n\010children\030\004 "
-    "\003(\0132\025.swellanimations.Node\022%\n\006parent\030\005 \001"
-    "(\0132\025.swellanimations.Node\"a\n\rRotationPoi"
-    "nt\022)\n\010Rotation\030\001 \002(\0132\027.swellanimations.V"
-    "ector\022\021\n\tnumFrames\030\002 \002(\005\022\022\n\nstartFrame\030\003"
-    " \002(\005", 684);
+    "\n\017modeldata.proto\022\017swellanimations\"\203\001\n\tA"
+    "nimation\022%\n\006frames\030\001 \003(\0132\025.swellanimatio"
+    "ns.Node\022\'\n\006spline\030\002 \003(\0132\027.swellanimation"
+    "s.Vector\022\024\n\014errorMessage\030\003 \001(\t\022\020\n\010hasErr"
+    "or\030\004 \001(\010\"\334\001\n\tModelData\022$\n\005model\030\001 \001(\0132\025."
+    "swellanimations.Node\022)\n\010upVector\030\002 \001(\0132\027"
+    ".swellanimations.Vector\022.\n\rcontrolPoints"
+    "\030\003 \003(\0132\027.swellanimations.Vector\0226\n\016rotat"
+    "ionpoints\030\004 \003(\0132\036.swellanimations.Rotati"
+    "onPoint\022\026\n\016numberOfFrames\030\005 \002(\005\")\n\006Vecto"
+    "r\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\022\t\n\001z\030\003 \002(\002\"\275\001\n\004N"
+    "ode\022\014\n\004name\030\001 \001(\t\022)\n\010position\030\002 \001(\0132\027.sw"
+    "ellanimations.Vector\022,\n\013eularAngles\030\003 \001("
+    "\0132\027.swellanimations.Vector\022\'\n\010children\030\004"
+    " \003(\0132\025.swellanimations.Node\022%\n\006parent\030\005 "
+    "\001(\0132\025.swellanimations.Node\"a\n\rRotationPo"
+    "int\022)\n\010Rotation\030\001 \002(\0132\027.swellanimations."
+    "Vector\022\021\n\tnumFrames\030\002 \002(\005\022\022\n\nstartFrame\030"
+    "\003 \002(\005", 725);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "modeldata.proto", &protobuf_RegisterTypes);
   Animation::default_instance_ = new Animation();
@@ -224,6 +227,8 @@ struct StaticDescriptorInitializer_modeldata_2eproto {
 #ifndef _MSC_VER
 const int Animation::kFramesFieldNumber;
 const int Animation::kSplineFieldNumber;
+const int Animation::kErrorMessageFieldNumber;
+const int Animation::kHasErrorFieldNumber;
 #endif  // !_MSC_VER
 
 Animation::Animation()
@@ -243,7 +248,10 @@ Animation::Animation(const Animation& from)
 }
 
 void Animation::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
+  errormessage_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  haserror_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -253,6 +261,9 @@ Animation::~Animation() {
 }
 
 void Animation::SharedDtor() {
+  if (errormessage_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete errormessage_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -279,6 +290,14 @@ Animation* Animation::New() const {
 }
 
 void Animation::Clear() {
+  if (_has_bits_[0 / 32] & 12) {
+    if (has_errormessage()) {
+      if (errormessage_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        errormessage_->clear();
+      }
+    }
+    haserror_ = false;
+  }
   frames_.Clear();
   spline_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -319,6 +338,38 @@ bool Animation::MergePartialFromCodedStream(
           goto handle_unusual;
         }
         if (input->ExpectTag(18)) goto parse_spline;
+        if (input->ExpectTag(26)) goto parse_errorMessage;
+        break;
+      }
+
+      // optional string errorMessage = 3;
+      case 3: {
+        if (tag == 26) {
+         parse_errorMessage:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_errormessage()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->errormessage().data(), this->errormessage().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "errormessage");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(32)) goto parse_hasError;
+        break;
+      }
+
+      // optional bool hasError = 4;
+      case 4: {
+        if (tag == 32) {
+         parse_hasError:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &haserror_)));
+          set_has_haserror();
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -360,6 +411,21 @@ void Animation::SerializeWithCachedSizes(
       2, this->spline(i), output);
   }
 
+  // optional string errorMessage = 3;
+  if (has_errormessage()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->errormessage().data(), this->errormessage().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "errormessage");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      3, this->errormessage(), output);
+  }
+
+  // optional bool hasError = 4;
+  if (has_haserror()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->haserror(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -384,6 +450,22 @@ void Animation::SerializeWithCachedSizes(
         2, this->spline(i), target);
   }
 
+  // optional string errorMessage = 3;
+  if (has_errormessage()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->errormessage().data(), this->errormessage().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "errormessage");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        3, this->errormessage(), target);
+  }
+
+  // optional bool hasError = 4;
+  if (has_haserror()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->haserror(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -395,6 +477,20 @@ void Animation::SerializeWithCachedSizes(
 int Animation::ByteSize() const {
   int total_size = 0;
 
+  if (_has_bits_[2 / 32] & (0xffu << (2 % 32))) {
+    // optional string errorMessage = 3;
+    if (has_errormessage()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->errormessage());
+    }
+
+    // optional bool hasError = 4;
+    if (has_haserror()) {
+      total_size += 1 + 1;
+    }
+
+  }
   // repeated .swellanimations.Node frames = 1;
   total_size += 1 * this->frames_size();
   for (int i = 0; i < this->frames_size(); i++) {
@@ -438,6 +534,14 @@ void Animation::MergeFrom(const Animation& from) {
   GOOGLE_CHECK_NE(&from, this);
   frames_.MergeFrom(from.frames_);
   spline_.MergeFrom(from.spline_);
+  if (from._has_bits_[2 / 32] & (0xffu << (2 % 32))) {
+    if (from.has_errormessage()) {
+      set_errormessage(from.errormessage());
+    }
+    if (from.has_haserror()) {
+      set_haserror(from.haserror());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -464,6 +568,8 @@ void Animation::Swap(Animation* other) {
   if (other != this) {
     frames_.Swap(&other->frames_);
     spline_.Swap(&other->spline_);
+    std::swap(errormessage_, other->errormessage_);
+    std::swap(haserror_, other->haserror_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

@@ -118,8 +118,31 @@ class Animation : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::swellanimations::Vector >*
       mutable_spline();
 
+  // optional string errorMessage = 3;
+  inline bool has_errormessage() const;
+  inline void clear_errormessage();
+  static const int kErrorMessageFieldNumber = 3;
+  inline const ::std::string& errormessage() const;
+  inline void set_errormessage(const ::std::string& value);
+  inline void set_errormessage(const char* value);
+  inline void set_errormessage(const char* value, size_t size);
+  inline ::std::string* mutable_errormessage();
+  inline ::std::string* release_errormessage();
+  inline void set_allocated_errormessage(::std::string* errormessage);
+
+  // optional bool hasError = 4;
+  inline bool has_haserror() const;
+  inline void clear_haserror();
+  static const int kHasErrorFieldNumber = 4;
+  inline bool haserror() const;
+  inline void set_haserror(bool value);
+
   // @@protoc_insertion_point(class_scope:swellanimations.Animation)
  private:
+  inline void set_has_errormessage();
+  inline void clear_has_errormessage();
+  inline void set_has_haserror();
+  inline void clear_has_haserror();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -127,6 +150,8 @@ class Animation : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::swellanimations::Node > frames_;
   ::google::protobuf::RepeatedPtrField< ::swellanimations::Vector > spline_;
+  ::std::string* errormessage_;
+  bool haserror_;
   friend void  protobuf_AddDesc_modeldata_2eproto();
   friend void protobuf_AssignDesc_modeldata_2eproto();
   friend void protobuf_ShutdownFile_modeldata_2eproto();
@@ -661,6 +686,106 @@ inline ::google::protobuf::RepeatedPtrField< ::swellanimations::Vector >*
 Animation::mutable_spline() {
   // @@protoc_insertion_point(field_mutable_list:swellanimations.Animation.spline)
   return &spline_;
+}
+
+// optional string errorMessage = 3;
+inline bool Animation::has_errormessage() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Animation::set_has_errormessage() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Animation::clear_has_errormessage() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Animation::clear_errormessage() {
+  if (errormessage_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    errormessage_->clear();
+  }
+  clear_has_errormessage();
+}
+inline const ::std::string& Animation::errormessage() const {
+  // @@protoc_insertion_point(field_get:swellanimations.Animation.errorMessage)
+  return *errormessage_;
+}
+inline void Animation::set_errormessage(const ::std::string& value) {
+  set_has_errormessage();
+  if (errormessage_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    errormessage_ = new ::std::string;
+  }
+  errormessage_->assign(value);
+  // @@protoc_insertion_point(field_set:swellanimations.Animation.errorMessage)
+}
+inline void Animation::set_errormessage(const char* value) {
+  set_has_errormessage();
+  if (errormessage_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    errormessage_ = new ::std::string;
+  }
+  errormessage_->assign(value);
+  // @@protoc_insertion_point(field_set_char:swellanimations.Animation.errorMessage)
+}
+inline void Animation::set_errormessage(const char* value, size_t size) {
+  set_has_errormessage();
+  if (errormessage_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    errormessage_ = new ::std::string;
+  }
+  errormessage_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:swellanimations.Animation.errorMessage)
+}
+inline ::std::string* Animation::mutable_errormessage() {
+  set_has_errormessage();
+  if (errormessage_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    errormessage_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:swellanimations.Animation.errorMessage)
+  return errormessage_;
+}
+inline ::std::string* Animation::release_errormessage() {
+  clear_has_errormessage();
+  if (errormessage_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = errormessage_;
+    errormessage_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Animation::set_allocated_errormessage(::std::string* errormessage) {
+  if (errormessage_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete errormessage_;
+  }
+  if (errormessage) {
+    set_has_errormessage();
+    errormessage_ = errormessage;
+  } else {
+    clear_has_errormessage();
+    errormessage_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:swellanimations.Animation.errorMessage)
+}
+
+// optional bool hasError = 4;
+inline bool Animation::has_haserror() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Animation::set_has_haserror() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Animation::clear_has_haserror() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Animation::clear_haserror() {
+  haserror_ = false;
+  clear_has_haserror();
+}
+inline bool Animation::haserror() const {
+  // @@protoc_insertion_point(field_get:swellanimations.Animation.hasError)
+  return haserror_;
+}
+inline void Animation::set_haserror(bool value) {
+  set_has_haserror();
+  haserror_ = value;
+  // @@protoc_insertion_point(field_set:swellanimations.Animation.hasError)
 }
 
 // -------------------------------------------------------------------
