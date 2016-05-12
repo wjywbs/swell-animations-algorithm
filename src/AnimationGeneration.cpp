@@ -223,8 +223,8 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
 // TODO: get the time it takes the user to draw the LOA, going to need the control points dropped at intervals
 Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     Animation* animation = new Animation();
-    ofstream myfile;
-    myfile.open ("/home/psarahdactyl/Documents/bbfunfunfun.txt");
+    //ofstream myfile;
+    //myfile.open ("/home/psarahdactyl/Documents/bbfunfunfun.txt");
 
     // calculate the constant b
     double b = calculateB(modelData, spline);
@@ -232,7 +232,7 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
 
     // calculate points in spline per frame
     double pointsPerFrame = spline.size() * b;
-    myfile << pointsPerFrame << endl;
+    //myfile << pointsPerFrame << endl;
 
     // calculate which point goes with which joint
     Node root = modelData->model();
@@ -253,7 +253,7 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     double z = last->z - secondLast->z;
     struct pt* difference = createPoint(x, y, z);
 
-    for(double t = 1; t < pointsPerFrame; t++)
+    for(double t = 1; t <= pointsPerFrame; t++)
     {
         struct pt* diff = multScalar(t, difference);
         struct pt* r = add(last, diff);
