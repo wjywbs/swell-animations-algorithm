@@ -1,10 +1,10 @@
 SRCFILES := src/AnimationGeneration.cpp src/hermite.cpp src/swell-integration.cpp
-SRCFILES += src/modeldata.pb.cc src/UnitTests.cpp
+SRCFILES += src/modeldata.pb.cc src/UnitTests.cpp src/UnitTestLayering.cpp
 HEADERS  := include/modeldata.pb.h include/point.h
 
 CXXFLAGS_LINUX := -g -fPIC `pkg-config --cflags --libs protobuf` -Wl,--no-as-needed -ldl
 CXXFLAGS_APPLE := -lprotobuf
-CXXFLAGS_TEST  := -g `pkg-config --cflags --libs protobuf` -lgtest
+CXXFLAGS_TEST  := -g `pkg-config --cflags --libs protobuf` -lgtest -lm
 
 SRCDIR := src/
 INCDIR := include/
@@ -14,14 +14,22 @@ BUILD_SO   := -g -shared -o $(BLDDIR)/swell-animations.so
 BUILD_DL   := -dynamiclib -arch x86_64 -lprotobuf -o $(BLDDIR)/swell-animations.bundle
 BUILD_TEST := -o $(BLDDIR)/UnitTests
 
-EXECTEST := bin/UnitTests
+EXEC_TEST  := bin/UnitTests
 
 build:  createBin $(SRCFILES) $(HEADERS)
 	g++ $(BUILD_SO) src/swell-integration.cpp src/modeldata.pb.cc -I$(INCDIR) $(CXXFLAGS_LINUX)
 
+sarah:  createBin $(SRCFILES) $(HEADERS)
+	g++ $(BUILD_SO) src/swell-integration-debug.cpp src/modeldata.pb.cc -I$(INCDIR) $(CXXFLAGS_LINUX)
+
+sarahb: createBin $(SRCFILES) $(HEADERS)
+	g++ -g -o $(BLDDIR)/swell-animations.so src/swell-integration-debug.cpp src/modeldata.pb.cc -I$(INCDIR) `pkg-config --cflags --libs protobuf` -Wl,--no-as-needed -ldl
+
 test: createBin $(SRCFILES) $(HEADERS)
 	g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTests.cpp $(CXXFLAGS_TEST)
-	$(EXECTEST)
+	$(EXEC_TEST)
+	g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTestLayering.cpp $(CXXFLAGS_TEST)
+	$(EXEC_TEST)
 
 createBin:
 	mkdir -p bin
