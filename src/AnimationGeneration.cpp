@@ -215,21 +215,6 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
 		}
     }
 
-    double modelLength = getModelLength(modelData);
-    struct pt* last = v.at(v.size()-1);
-    struct pt* realLast = multScalar(modelLength, last);
-    double dist = getDistance(realLast, last);
-    double b = calculateB(modelData, v);
-    double pointsPerFrame = v.size() * b;
-    double num = dist / pointsPerFrame;
-
-    for(int t = 0; t < dist; t+=num)
-    {
-        double scalar = t;
-        struct pt* r = multScalar(scalar, last);
-        v.push_back(r);
-    }
-
     return v;
 }
 
@@ -258,12 +243,34 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     //they are backwards, don't know why but I fixed it
     reverse(correspondingPoints.begin(), correspondingPoints.end());
 
+    vector<struct pt*> extra;
+
+    struct pt* last = spline.at(spline.size()-1);
+    struct pt* secondLast = spline.at(spline.size()-2);
+
+    double x = last->x - secondLast->x;
+    double y = last->y - secondLast->y;
+    double z = last->z - secondLast->z;
+    struct pt* difference = createPoint(x, y, z);
+
+    for(double t = 1; t < pointsPerFrame; t++)
+    {
+        struct pt* diff = multScalar(t, difference);
+        struct pt* r = add(last, diff);
+        extra.push_back(r);
+    }
+
+    vector<struct pt*> newSpline;
+    newSpline.reserve( spline.size() + extra.size() ); // preallocate memory
+    newSpline.insert( newSpline.end(), spline.begin(), spline.end() );
+    newSpline.insert( newSpline.end(), extra.begin(), extra.end() );
+
     // go through every point in spline
     // iterating by 1 every time gives us frames overlapping points in the spline
-    for (int i = 0; i < spline.size(); i++) {
+    for (int i = 0; i < newSpline.size() - pointsPerFrame; i++) {
         int index = 0;
         // move model and its joints
-        Node frame = jointsToSpline(root, spline, correspondingPoints, index); //, &myfile);
+        Node frame = jointsToSpline(root, newSpline, correspondingPoints, index); //, &myfile);
 
         // go through the mapped joints on the model and move them up by 1
         // since we are on a new frame
