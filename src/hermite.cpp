@@ -18,7 +18,7 @@ struct pt *add(const struct pt *l, const struct pt *r) {
 }
 
 /* Subtract two points */
-struct pt *minus(const struct pt *l, const struct pt *r)
+struct pt *minusPt(const struct pt *l, const struct pt *r)
 {
 	struct pt *tmp = createPoint(l->x - r->x, l->y - r->y, l->z - r->z);
 	return tmp;
@@ -39,7 +39,7 @@ struct pt *multScalar(const double scalar, const struct pt *point) {
 
 /* Get the distance between two points */
 double getDistance(const struct pt *l, const struct pt *r) {
-	struct pt *tmp = minus(l, r);
+	struct pt *tmp = minusPt(l, r);
 	double x = tmp->x;
 	double y = tmp->y;
 	double z = tmp->z;
@@ -49,7 +49,7 @@ double getDistance(const struct pt *l, const struct pt *r) {
 /* One sided diff */
 struct pt *forwardDiff(const struct pt *a, const struct pt *b)
 {
-	struct pt *tmp = minus(b, a);
+	struct pt *tmp = minusPt(b, a);
 	return multScalar(3, tmp);
 }
 
@@ -60,8 +60,8 @@ struct pt *midpointDiff(const struct pt *a, const struct pt *b, const struct pt 
 
 	// Since this equation is rather large, we are splitting it up into smaller components
 	// Define the first and second term
-	struct pt *term1 = multScalar(offset, minus(c, b));
-	struct pt *term2 = multScalar(offset, minus(b, a));
+	struct pt *term1 = multScalar(offset, minusPt(c, b));
+	struct pt *term2 = multScalar(offset, minusPt(b, a));
 
 	// Define the result value
   return add(term1, term2);

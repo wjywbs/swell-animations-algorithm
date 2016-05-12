@@ -1,6 +1,6 @@
 // AnimationGeneration.cpp - backend animation generation functions
 // Author: Sarah
-// Date last updated: 05/03/2016
+// Date last updated: 05/12/2016
 //
 #include <fstream>
 #include <iomanip>
@@ -17,65 +17,6 @@
 
 using namespace swellanimations;
 using namespace std;
-
-/* uses hermite.cpp to calculate a spline based on control points */
-/* for rolling and keyframing (connecting separated LOAs) */
-std::vector<struct pt*> getSpline(ModelData* modelData) {
-    std::vector<struct pt*> v;
-    // TODO: check for self intersection of line
-    // idea: check if any two control points have the exact same position
-    // get indices of mutable_controlpoints for each of the 4 new control points
-	float frameIncs = modelData->controlpoints_size() / (float) modelData->numberofframes();
-	float currentInc = frameIncs;
-    // if line contains no self intersections
-    // get user drawn curve from frontend and store in a vector
-    //
-    //
-    for (int i = 0; i < modelData->controlpoints_size()-1; i++) {
-        Vector* p0Vec = modelData->mutable_controlpoints(i);
-        Vector* p1Vec = modelData->mutable_controlpoints(i+1);
-
-        struct pt* p0 = createPoint((double)p0Vec->x(), (double)p0Vec->y(), (double)p0Vec->z()); 
-        struct pt* p1 = createPoint((double)p1Vec->x(), (double)p1Vec->y(), (double)p1Vec->z()); 
-        struct pt* m0;
-        struct pt* m1;
-
-        if(i == 0)
-        {
-            Vector* p2Vec = modelData->mutable_controlpoints(i+2);
-            struct pt* p2 = createPoint((double)p2Vec->x(), (double)p2Vec->y(), (double)p2Vec->z()); 
-            m0 = forwardDiff(p0, p1);
-            m1 = midpointDiff(p0, p1, p2);
-        }
-        else if(i == modelData->controlpoints_size()-2)
-        {
-            Vector* p2Vec = modelData->mutable_controlpoints(i-2);
-            struct pt* p2 = createPoint((double)p2Vec->x(), (double)p2Vec->y(), (double)p2Vec->z()); 
-            m1 = forwardDiff(p0, p1);
-            m0 = midpointDiff(p2, p0, p1);
-        }
-        else
-        {
-            Vector* p00Vec = modelData->mutable_controlpoints(i-1);
-            struct pt* p00 = createPoint((double)p00Vec->x(), (double)p00Vec->y(), (double)p00Vec->z()); 
-            Vector* p2Vec = modelData->mutable_controlpoints(i+2);
-            struct pt* p2 = createPoint((double)p2Vec->x(), (double)p2Vec->y(), (double)p2Vec->z()); 
-            m0 = midpointDiff(p00, p0, p1);
-            m1 = midpointDiff(p0, p1, p2);
-        }
-
-		if (currentInc < i + 1){
-			for (double t = (currentInc - i + 1); t < 1; t += frameIncs) {
-				struct pt* r = hermite(t, p0, m0, p1, m1);
-				v.push_back(r);
-				currentInc += frameIncs;
-			}
-		}
-    }
-
-    return v;
-}
-
 
 /* returns the length of the spline by adding the distances between all interpolated points */
 /* retthis is the length of the user drawn curve */
@@ -143,7 +84,7 @@ Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspond
         z1 = (s->z + s2->z) / 2; 
         x2 = s2->x; 
         y2 = s2->y; 
-        z2 = s2->z; 
+        z2 = s2->z;
     }
     else if (c == spline.size()-1)
     {
@@ -214,16 +155,91 @@ double getModelLength(ModelData* modelData) {
 double calculateB(ModelData* modelData, vector<struct pt*> spline) {
     double splineLength = getSplineLength(spline);
     double modelLength = getModelLength(modelData);
-    double b = modelLength / splineLength;
+    double b = modelLength / (splineLength); // just testing * 1.5);
     return b;
 }
+
+/* uses hermite.cpp to calculate a spline based on control points */
+/* for rolling and keyframing (connecting separated LOAs) */
+std::vector<struct pt*> getSpline(ModelData* modelData) {
+    std::vector<struct pt*> v;
+    // TODO: check for self intersection of line
+    // idea: check if any two control points have the exact same position
+
+    // get indices of mutable_controlpoints for each of the 4 new control points
+	float frameIncs = modelData->controlpoints_size() / (float) modelData->numberofframes();
+	float currentInc = frameIncs;
+    // if line contains no self intersections
+    // get user drawn curve from frontend and store in a vector
+    //
+    //
+    for (int i = 0; i < modelData->controlpoints_size()-1; i++) {
+        Vector* p0Vec = modelData->mutable_controlpoints(i);
+        Vector* p1Vec = modelData->mutable_controlpoints(i+1);
+
+        struct pt* p0 = createPoint(p0Vec->x(), p0Vec->y(), p0Vec->z()); 
+        struct pt* p1 = createPoint(p1Vec->x(), p1Vec->y(), p1Vec->z()); 
+        struct pt* m0;
+        struct pt* m1;
+
+        if(i == 0)
+        {
+            Vector* p2Vec = modelData->mutable_controlpoints(i+2);
+            struct pt* p2 = createPoint(p2Vec->x(), p2Vec->y(), p2Vec->z()); 
+            m0 = forwardDiff(p0, p1);
+            m1 = midpointDiff(p0, p1, p2);
+        }
+        else if(i == modelData->controlpoints_size()-2)
+        {
+            Vector* p2Vec = modelData->mutable_controlpoints(i-2);
+            struct pt* p2 = createPoint(p2Vec->x(), p2Vec->y(), p2Vec->z()); 
+            m1 = forwardDiff(p0, p1);
+            m0 = midpointDiff(p2, p0, p1);
+        }
+        else
+        {
+            Vector* p00Vec = modelData->mutable_controlpoints(i-1);
+            struct pt* p00 = createPoint(p00Vec->x(), p00Vec->y(), p00Vec->z()); 
+            Vector* p2Vec = modelData->mutable_controlpoints(i+2);
+            struct pt* p2 = createPoint(p2Vec->x(), p2Vec->y(), p2Vec->z()); 
+            m0 = midpointDiff(p00, p0, p1);
+            m1 = midpointDiff(p0, p1, p2);
+        }
+
+		if (currentInc < i + 1){
+			for (double t = (currentInc - i + 1); t < 1; t += frameIncs) {
+				struct pt* r = hermite(t, p0, m0, p1, m1);
+				v.push_back(r);
+				currentInc += frameIncs;
+			}
+		}
+    }
+
+    double modelLength = getModelLength(modelData);
+    struct pt* last = v.at(v.size()-1);
+    struct pt* realLast = multScalar(modelLength, last);
+    double dist = getDistance(realLast, last);
+    double b = calculateB(modelData, v);
+    double pointsPerFrame = v.size() * b;
+    double num = dist / pointsPerFrame;
+
+    for(int t = 0; t < dist; t+=num)
+    {
+        double scalar = t;
+        struct pt* r = multScalar(scalar, last);
+        v.push_back(r);
+    }
+
+    return v;
+}
+
 
 /* returns an animation of the model evaluated at a certain point along spline */
 // TODO: get the time it takes the user to draw the LOA, going to need the control points dropped at intervals
 Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     Animation* animation = new Animation();
-    //ofstream myfile;
-    //myfile.open ("/home/psarahdactyl/Documents/bbfunfunfun.txt");
+    ofstream myfile;
+    myfile.open ("/home/psarahdactyl/Documents/bbfunfunfun.txt");
 
     // calculate the constant b
     double b = calculateB(modelData, spline);
@@ -231,6 +247,7 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
 
     // calculate points in spline per frame
     double pointsPerFrame = spline.size() * b;
+    myfile << pointsPerFrame << endl;
 
     // calculate which point goes with which joint
     Node root = modelData->model();
@@ -243,7 +260,7 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
 
     // go through every point in spline
     // iterating by 1 every time gives us frames overlapping points in the spline
-    for (int i = 0; i < spline.size() - pointsPerFrame; i++) {
+    for (int i = 0; i < spline.size(); i++) {
         int index = 0;
         // move model and its joints
         Node frame = jointsToSpline(root, spline, correspondingPoints, index); //, &myfile);
