@@ -13,7 +13,7 @@
 #include "modeldata.pb.h"
 #include "point.h"
 #include "hermite.cpp"
-#include "diff_hermite.c"
+#include "diff_hermite.h"
 
 using namespace swellanimations;
 using namespace std;
