@@ -40,11 +40,11 @@ TEST(hermite_add, can_add) {
 	free(r);
 }
 
-TEST(hermite_minus, can_subtract) {
+TEST(hermite_minusPt, can_subtract) {
 	pt *p, *q, *r;
 	p = createPoint(7, 8, 9);
 	q = createPoint(1, 2, 3);
-	r = minus(p, q);
+	r = minusPt(p, q);
 	ASSERT_TRUE(fabs(6 - (p->x - q->x)) < EPSILON);
 	ASSERT_TRUE(fabs(6 - (p->y - q->y)) < EPSILON);
 	ASSERT_TRUE(fabs(6 - (p->z - q->z)) < EPSILON);
@@ -54,7 +54,7 @@ TEST(hermite_minus, can_subtract) {
 
 	p = createPoint(76.4, 2.44, 76.9);
 	q = createPoint(12.8, 8.23, 9.1);
-	r = minus(p, q);
+	r = minusPt(p, q);
 	ASSERT_TRUE(fabs(63.6 - (p->x - q->x)) < EPSILON);
 	ASSERT_TRUE(fabs(-5.79 - (p->y - q->y)) < EPSILON);
 	ASSERT_TRUE(fabs(67.8 - (p->z - q->z)) < EPSILON);
@@ -118,7 +118,7 @@ TEST(hermite_getDistance, can_get_distance) {
 TEST(hermite_forwardDiff, can_get_forward_diff) {
 	pt *point1 = createPoint(1, 1, 1);
 	pt *point2 = createPoint(2, 3, 1);
-	pt *point3 = minus(point2, point1);
+	pt *point3 = minusPt(point2, point1);
 	pt *point4 = multScalar(3, point3);
 	ASSERT_EQ(3, point4->x);
 	ASSERT_EQ(6, point4->y);
@@ -130,7 +130,7 @@ TEST(hermite_forwardDiff, can_get_forward_diff) {
 
 	point1 = createPoint(-5, 2, -9);
 	point2 = createPoint(11, 19, -26);
-	point3 = minus(point2, point1);
+	point3 = minusPt(point2, point1);
 	point4 = multScalar(3, point3);
 	ASSERT_EQ(48, point4->x);
 	ASSERT_EQ(51, point4->y);
