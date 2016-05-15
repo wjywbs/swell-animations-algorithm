@@ -38,6 +38,7 @@ class ModelData;
 class Vector;
 class Node;
 class RotationPoint;
+class AnimationLayer;
 
 // ===================================================================
 
@@ -238,6 +239,18 @@ class ModelData : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 numberofframes() const;
   inline void set_numberofframes(::google::protobuf::int32 value);
 
+  // repeated .swellanimations.AnimationLayer animationLayers = 6;
+  inline int animationlayers_size() const;
+  inline void clear_animationlayers();
+  static const int kAnimationLayersFieldNumber = 6;
+  inline const ::swellanimations::AnimationLayer& animationlayers(int index) const;
+  inline ::swellanimations::AnimationLayer* mutable_animationlayers(int index);
+  inline ::swellanimations::AnimationLayer* add_animationlayers();
+  inline const ::google::protobuf::RepeatedPtrField< ::swellanimations::AnimationLayer >&
+      animationlayers() const;
+  inline ::google::protobuf::RepeatedPtrField< ::swellanimations::AnimationLayer >*
+      mutable_animationlayers();
+
   // @@protoc_insertion_point(class_scope:swellanimations.ModelData)
  private:
   inline void set_has_model();
@@ -255,6 +268,7 @@ class ModelData : public ::google::protobuf::Message {
   ::swellanimations::Vector* upvector_;
   ::google::protobuf::RepeatedPtrField< ::swellanimations::Vector > controlpoints_;
   ::google::protobuf::RepeatedPtrField< ::swellanimations::RotationPoint > rotationpoints_;
+  ::google::protobuf::RepeatedPtrField< ::swellanimations::AnimationLayer > animationlayers_;
   ::google::protobuf::int32 numberofframes_;
   friend void  protobuf_AddDesc_modeldata_2eproto();
   friend void protobuf_AssignDesc_modeldata_2eproto();
@@ -596,6 +610,108 @@ class RotationPoint : public ::google::protobuf::Message {
   void InitAsDefaultInstance();
   static RotationPoint* default_instance_;
 };
+// -------------------------------------------------------------------
+
+class AnimationLayer : public ::google::protobuf::Message {
+ public:
+  AnimationLayer();
+  virtual ~AnimationLayer();
+
+  AnimationLayer(const AnimationLayer& from);
+
+  inline AnimationLayer& operator=(const AnimationLayer& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const AnimationLayer& default_instance();
+
+  void Swap(AnimationLayer* other);
+
+  // implements Message ----------------------------------------------
+
+  AnimationLayer* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const AnimationLayer& from);
+  void MergeFrom(const AnimationLayer& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .swellanimations.Vector layerPoints = 1;
+  inline int layerpoints_size() const;
+  inline void clear_layerpoints();
+  static const int kLayerPointsFieldNumber = 1;
+  inline const ::swellanimations::Vector& layerpoints(int index) const;
+  inline ::swellanimations::Vector* mutable_layerpoints(int index);
+  inline ::swellanimations::Vector* add_layerpoints();
+  inline const ::google::protobuf::RepeatedPtrField< ::swellanimations::Vector >&
+      layerpoints() const;
+  inline ::google::protobuf::RepeatedPtrField< ::swellanimations::Vector >*
+      mutable_layerpoints();
+
+  // required int32 numFrames = 2;
+  inline bool has_numframes() const;
+  inline void clear_numframes();
+  static const int kNumFramesFieldNumber = 2;
+  inline ::google::protobuf::int32 numframes() const;
+  inline void set_numframes(::google::protobuf::int32 value);
+
+  // required int32 startFrame = 3;
+  inline bool has_startframe() const;
+  inline void clear_startframe();
+  static const int kStartFrameFieldNumber = 3;
+  inline ::google::protobuf::int32 startframe() const;
+  inline void set_startframe(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:swellanimations.AnimationLayer)
+ private:
+  inline void set_has_numframes();
+  inline void clear_has_numframes();
+  inline void set_has_startframe();
+  inline void clear_has_startframe();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::RepeatedPtrField< ::swellanimations::Vector > layerpoints_;
+  ::google::protobuf::int32 numframes_;
+  ::google::protobuf::int32 startframe_;
+  friend void  protobuf_AddDesc_modeldata_2eproto();
+  friend void protobuf_AssignDesc_modeldata_2eproto();
+  friend void protobuf_ShutdownFile_modeldata_2eproto();
+
+  void InitAsDefaultInstance();
+  static AnimationLayer* default_instance_;
+};
 // ===================================================================
 
 
@@ -831,6 +947,36 @@ inline void ModelData::set_numberofframes(::google::protobuf::int32 value) {
   set_has_numberofframes();
   numberofframes_ = value;
   // @@protoc_insertion_point(field_set:swellanimations.ModelData.numberOfFrames)
+}
+
+// repeated .swellanimations.AnimationLayer animationLayers = 6;
+inline int ModelData::animationlayers_size() const {
+  return animationlayers_.size();
+}
+inline void ModelData::clear_animationlayers() {
+  animationlayers_.Clear();
+}
+inline const ::swellanimations::AnimationLayer& ModelData::animationlayers(int index) const {
+  // @@protoc_insertion_point(field_get:swellanimations.ModelData.animationLayers)
+  return animationlayers_.Get(index);
+}
+inline ::swellanimations::AnimationLayer* ModelData::mutable_animationlayers(int index) {
+  // @@protoc_insertion_point(field_mutable:swellanimations.ModelData.animationLayers)
+  return animationlayers_.Mutable(index);
+}
+inline ::swellanimations::AnimationLayer* ModelData::add_animationlayers() {
+  // @@protoc_insertion_point(field_add:swellanimations.ModelData.animationLayers)
+  return animationlayers_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::swellanimations::AnimationLayer >&
+ModelData::animationlayers() const {
+  // @@protoc_insertion_point(field_list:swellanimations.ModelData.animationLayers)
+  return animationlayers_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::swellanimations::AnimationLayer >*
+ModelData::mutable_animationlayers() {
+  // @@protoc_insertion_point(field_mutable_list:swellanimations.ModelData.animationLayers)
+  return &animationlayers_;
 }
 
 // -------------------------------------------------------------------
@@ -1233,6 +1379,88 @@ inline void RotationPoint::set_startframe(::google::protobuf::int32 value) {
   set_has_startframe();
   startframe_ = value;
   // @@protoc_insertion_point(field_set:swellanimations.RotationPoint.startFrame)
+}
+
+// -------------------------------------------------------------------
+
+// AnimationLayer
+
+// repeated .swellanimations.Vector layerPoints = 1;
+inline int AnimationLayer::layerpoints_size() const {
+  return layerpoints_.size();
+}
+inline void AnimationLayer::clear_layerpoints() {
+  layerpoints_.Clear();
+}
+inline const ::swellanimations::Vector& AnimationLayer::layerpoints(int index) const {
+  // @@protoc_insertion_point(field_get:swellanimations.AnimationLayer.layerPoints)
+  return layerpoints_.Get(index);
+}
+inline ::swellanimations::Vector* AnimationLayer::mutable_layerpoints(int index) {
+  // @@protoc_insertion_point(field_mutable:swellanimations.AnimationLayer.layerPoints)
+  return layerpoints_.Mutable(index);
+}
+inline ::swellanimations::Vector* AnimationLayer::add_layerpoints() {
+  // @@protoc_insertion_point(field_add:swellanimations.AnimationLayer.layerPoints)
+  return layerpoints_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::swellanimations::Vector >&
+AnimationLayer::layerpoints() const {
+  // @@protoc_insertion_point(field_list:swellanimations.AnimationLayer.layerPoints)
+  return layerpoints_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::swellanimations::Vector >*
+AnimationLayer::mutable_layerpoints() {
+  // @@protoc_insertion_point(field_mutable_list:swellanimations.AnimationLayer.layerPoints)
+  return &layerpoints_;
+}
+
+// required int32 numFrames = 2;
+inline bool AnimationLayer::has_numframes() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void AnimationLayer::set_has_numframes() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void AnimationLayer::clear_has_numframes() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void AnimationLayer::clear_numframes() {
+  numframes_ = 0;
+  clear_has_numframes();
+}
+inline ::google::protobuf::int32 AnimationLayer::numframes() const {
+  // @@protoc_insertion_point(field_get:swellanimations.AnimationLayer.numFrames)
+  return numframes_;
+}
+inline void AnimationLayer::set_numframes(::google::protobuf::int32 value) {
+  set_has_numframes();
+  numframes_ = value;
+  // @@protoc_insertion_point(field_set:swellanimations.AnimationLayer.numFrames)
+}
+
+// required int32 startFrame = 3;
+inline bool AnimationLayer::has_startframe() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void AnimationLayer::set_has_startframe() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void AnimationLayer::clear_has_startframe() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void AnimationLayer::clear_startframe() {
+  startframe_ = 0;
+  clear_has_startframe();
+}
+inline ::google::protobuf::int32 AnimationLayer::startframe() const {
+  // @@protoc_insertion_point(field_get:swellanimations.AnimationLayer.startFrame)
+  return startframe_;
+}
+inline void AnimationLayer::set_startframe(::google::protobuf::int32 value) {
+  set_has_startframe();
+  startframe_ = value;
+  // @@protoc_insertion_point(field_set:swellanimations.AnimationLayer.startFrame)
 }
 
 
