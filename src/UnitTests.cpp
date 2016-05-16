@@ -215,9 +215,9 @@ TEST(hermite_hermite, can_get_hermite_spline) {
   pt *m1 = createPoint(18, 27.6, 22.9);
 
   pt *result = hermite(t, p0, m0, p1, m1);
-  cout << result->x << endl;
-  cout << result->y << endl;
-  cout << result->z << endl;
+  cout << result->x << "\n";
+  cout << result->y << "\n";
+  cout << result->z << "\n";
   //ASSERT_TRUE(fabs(5519.869 - (result->x)) < EPSILON);
   //ASSERT_TRUE(fabs(1741.9914 - (result->y)) < EPSILON);
   //ASSERT_TRUE(fabs(434.06585 - (result->z)) < EPSILON);
