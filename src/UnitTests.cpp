@@ -204,7 +204,7 @@ TEST(hermite_hermiteBasis11, can_get_hermite_basis_11) {
 
   t = 9.7;
   result = hermiteBasis11(t);
-  ASSERT_EQ(818.583, result);
+  ASSERT_TRUE(fabs(818.583 - result) < EPSILON);
 }
 
 int main(int argc, char **argv) {
