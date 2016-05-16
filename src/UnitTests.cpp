@@ -207,6 +207,25 @@ TEST(hermite_hermiteBasis11, can_get_hermite_basis_11) {
   ASSERT_TRUE(fabs(818.583 - result) < EPSILON);
 }
 
+TEST(hermite_hermite, can_get_hermite_spline) {
+  double t = 6.3;
+  pt *p0 = createPoint(16, 2.7, -4.6);
+  pt *m0 = createPoint(-9, -7.8, 19.45);
+  pt *p1 = createPoint(4.5, 6, 9.8);
+  pt *m1 = createPoint(18, 27.6, 22.9);
+
+  pt *result = hermite(t, p0, m0, p1, m1);
+  ASSERT_TRUE(fabs(5519.869 - (result->x)) < EPSILON);
+  ASSERT_TRUE(fabs(1741.9914 - (result->y)) < EPSILON);
+  ASSERT_TRUE(fabs(434.06585 - (result->z)) < EPSILON);
+
+  free(p0);
+  free(m0);
+  free(p1);
+  free(m1);
+  free(result);
+}
+
 int main(int argc, char **argv) {
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
