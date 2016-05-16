@@ -187,6 +187,16 @@ TEST(hermite_hermiteBasis10, can_get_hermite_basis_10) {
 	ASSERT_EQ(21.875, result);
 }
 
+TEST(hermite_hermiteBasis01, can_get_hermite_basis_01) {
+  double t = 4;
+  double result = hermiteBasis01(t);
+  ASSERT_EQ(-80, result);
+
+  t = 9.5;
+  double result = hermiteBasis01(t);
+  ASSERT_EQ(-1444, result);
+}
+
 int main(int argc, char **argv) {
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
