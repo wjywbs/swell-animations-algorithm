@@ -84,8 +84,6 @@ double hermiteBasis11(double t) {
 }
 
 struct pt *hermite(const double t, const struct pt *p0, const struct pt *m0, const struct pt *p1, const struct pt *m1) {
-	struct pt *result;
-
 	return add(add(multScalar(hermiteBasis00(t), p0), multScalar(hermiteBasis10(t), m0)), add(multScalar(hermiteBasis01(t), p1), multScalar(hermiteBasis11(t), m1)));
 }
 
