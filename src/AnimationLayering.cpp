@@ -63,9 +63,10 @@ pt MovePoint(pt a_spline, pt b_spline, pt a_model, pt b_model) {
 vector<pt> Morph(vector<pt> detail, vector<pt> model) {
 	vector<int>control;
 	control.push_back(0);
-	control.push_back(detail.size()*25/100);
-	control.push_back(detail.size()*50/100);
-	control.push_back(detail.size()*75/100);
+	control.push_back(detail.size()*34/100);
+	control.push_back(detail.size()*51/100);
+	control.push_back(detail.size()*68/100);
+	control.push_back(detail.size()*85/100);
 	control.push_back(detail.size()-1);
 
 	for (int i = 0; i < control.size() - 1; i++) {
