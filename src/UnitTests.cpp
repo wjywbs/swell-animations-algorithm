@@ -193,7 +193,7 @@ TEST(hermite_hermiteBasis01, can_get_hermite_basis_01) {
   ASSERT_EQ(-80, result);
 
   t = 9.5;
-  double result = hermiteBasis01(t);
+  result = hermiteBasis01(t);
   ASSERT_EQ(-1444, result);
 }
 
