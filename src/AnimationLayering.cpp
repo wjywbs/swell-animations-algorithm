@@ -133,10 +133,19 @@ void Morph(Node *frames, AnimationLayer* layer, int dloa_size, int dist_to_dloa)
 
 	// Next couple points on the model's spine
 	for(int x = 1; nextchild->children_size() > 0; x++) {
+		// establish bounds
+		int first_bound = (dloa_size/100)*(100*(x)/childcount);
+		int next_bound = (dloa_size/100)*(100*(x+1)/childcount);
+
+		// make sure we don't go out of bounds
+		if(next_bound > dloa_size) {
+			next_bound = dloa_size;
+		}
+
 		MoveVector(	current_position,
 				nextchild->mutable_position(),
-				layer->mutable_layerpoints((dloa_size/100)*(100*(x-1)/childcount)),
-				layer->mutable_layerpoints((dloa_size/100)*(100*x/(childcount))),
+				layer->mutable_layerpoints(first_bound),
+				layer->mutable_layerpoints(next_bound),
 				dist_to_dloa
 				);
 		current_position = nextchild->mutable_position();
