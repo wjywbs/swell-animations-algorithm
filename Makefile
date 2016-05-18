@@ -28,8 +28,8 @@ sarahb: createBin $(SRCFILES) $(HEADERS)
 test: createBin $(SRCFILES) $(HEADERS)
 	g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTests.cpp $(CXXFLAGS_TEST)
 	$(EXEC_TEST)
-	g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTestLayering.cpp $(CXXFLAGS_TEST)
-	$(EXEC_TEST)
+	#g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTestLayering.cpp $(CXXFLAGS_TEST)
+	#$(EXEC_TEST)
 
 createBin:
 	mkdir -p bin
