@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string.h>
 #include <vector>
+#include <cmath>
 #include <algorithm>
 #include "modeldata.pb.h"
 #include "point.h"
@@ -120,13 +121,21 @@ Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspond
     Differentiate(y0, y1, y2, t, &(d->y));
     Differentiate(z0, z1, z2, t, &(d->z));
 
+    float x = d->x;
+    float y = d->y;
+    float z = d->z;
+
+    float r = sqrt(x*x + y*y + z*z);
+    float u = atan(y/x);
+    float p = acos(z/r);
+
     frame.mutable_position()->set_x(s->x);
     frame.mutable_position()->set_y(s->y);
     frame.mutable_position()->set_z(s->z);
 
-    frame.mutable_eularangles()->set_x(d->x);
-    frame.mutable_eularangles()->set_y(d->y);
-    frame.mutable_eularangles()->set_z(d->z);
+    frame.mutable_eularangles()->set_x(r);
+    frame.mutable_eularangles()->set_y(u);
+    frame.mutable_eularangles()->set_z(p);
 
     //*myfile << "-- ";
     //*myfile << root.name() << endl;
