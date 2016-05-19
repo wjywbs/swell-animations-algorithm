@@ -35,6 +35,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* RotationPoint_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   RotationPoint_reflection_ = NULL;
+const ::google::protobuf::Descriptor* AnimationLayer_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  AnimationLayer_reflection_ = NULL;
 
 }  // namespace
 
@@ -62,12 +65,13 @@ void protobuf_AssignDesc_modeldata_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Animation));
   ModelData_descriptor_ = file->message_type(1);
-  static const int ModelData_offsets_[5] = {
+  static const int ModelData_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelData, model_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelData, upvector_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelData, controlpoints_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelData, rotationpoints_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelData, numberofframes_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelData, animationlayers_),
   };
   ModelData_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -133,6 +137,23 @@ void protobuf_AssignDesc_modeldata_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(RotationPoint));
+  AnimationLayer_descriptor_ = file->message_type(5);
+  static const int AnimationLayer_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AnimationLayer, layerpoints_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AnimationLayer, numframes_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AnimationLayer, startframe_),
+  };
+  AnimationLayer_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      AnimationLayer_descriptor_,
+      AnimationLayer::default_instance_,
+      AnimationLayer_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AnimationLayer, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AnimationLayer, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(AnimationLayer));
 }
 
 namespace {
@@ -155,6 +176,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
     Node_descriptor_, &Node::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     RotationPoint_descriptor_, &RotationPoint::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    AnimationLayer_descriptor_, &AnimationLayer::default_instance());
 }
 
 }  // namespace
@@ -170,6 +193,8 @@ void protobuf_ShutdownFile_modeldata_2eproto() {
   delete Node_reflection_;
   delete RotationPoint::default_instance_;
   delete RotationPoint_reflection_;
+  delete AnimationLayer::default_instance_;
+  delete AnimationLayer_reflection_;
 }
 
 void protobuf_AddDesc_modeldata_2eproto() {
@@ -182,21 +207,25 @@ void protobuf_AddDesc_modeldata_2eproto() {
     "\n\017modeldata.proto\022\017swellanimations\"[\n\tAn"
     "imation\022%\n\006frames\030\001 \003(\0132\025.swellanimation"
     "s.Node\022\'\n\006spline\030\002 \003(\0132\027.swellanimations"
-    ".Vector\"\334\001\n\tModelData\022$\n\005model\030\001 \001(\0132\025.s"
+    ".Vector\"\226\002\n\tModelData\022$\n\005model\030\001 \001(\0132\025.s"
     "wellanimations.Node\022)\n\010upVector\030\002 \001(\0132\027."
     "swellanimations.Vector\022.\n\rcontrolPoints\030"
     "\003 \003(\0132\027.swellanimations.Vector\0226\n\016rotati"
     "onpoints\030\004 \003(\0132\036.swellanimations.Rotatio"
-    "nPoint\022\026\n\016numberOfFrames\030\005 \002(\005\")\n\006Vector"
-    "\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\022\t\n\001z\030\003 \002(\002\"\275\001\n\004No"
-    "de\022\014\n\004name\030\001 \001(\t\022)\n\010position\030\002 \001(\0132\027.swe"
-    "llanimations.Vector\022,\n\013eularAngles\030\003 \001(\013"
-    "2\027.swellanimations.Vector\022\'\n\010children\030\004 "
-    "\003(\0132\025.swellanimations.Node\022%\n\006parent\030\005 \001"
-    "(\0132\025.swellanimations.Node\"a\n\rRotationPoi"
-    "nt\022)\n\010Rotation\030\001 \002(\0132\027.swellanimations.V"
-    "ector\022\021\n\tnumFrames\030\002 \002(\005\022\022\n\nstartFrame\030\003"
-    " \002(\005", 684);
+    "nPoint\022\026\n\016numberOfFrames\030\005 \002(\005\0228\n\017animat"
+    "ionLayers\030\006 \003(\0132\037.swellanimations.Animat"
+    "ionLayer\")\n\006Vector\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002"
+    "\022\t\n\001z\030\003 \002(\002\"\275\001\n\004Node\022\014\n\004name\030\001 \001(\t\022)\n\010po"
+    "sition\030\002 \001(\0132\027.swellanimations.Vector\022,\n"
+    "\013eularAngles\030\003 \001(\0132\027.swellanimations.Vec"
+    "tor\022\'\n\010children\030\004 \003(\0132\025.swellanimations."
+    "Node\022%\n\006parent\030\005 \001(\0132\025.swellanimations.N"
+    "ode\"a\n\rRotationPoint\022)\n\010Rotation\030\001 \002(\0132\027"
+    ".swellanimations.Vector\022\021\n\tnumFrames\030\002 \002"
+    "(\005\022\022\n\nstartFrame\030\003 \002(\005\"e\n\016AnimationLayer"
+    "\022,\n\013layerPoints\030\001 \003(\0132\027.swellanimations."
+    "Vector\022\021\n\tnumFrames\030\002 \002(\005\022\022\n\nstartFrame\030"
+    "\003 \002(\005", 845);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "modeldata.proto", &protobuf_RegisterTypes);
   Animation::default_instance_ = new Animation();
@@ -204,11 +233,13 @@ void protobuf_AddDesc_modeldata_2eproto() {
   Vector::default_instance_ = new Vector();
   Node::default_instance_ = new Node();
   RotationPoint::default_instance_ = new RotationPoint();
+  AnimationLayer::default_instance_ = new AnimationLayer();
   Animation::default_instance_->InitAsDefaultInstance();
   ModelData::default_instance_->InitAsDefaultInstance();
   Vector::default_instance_->InitAsDefaultInstance();
   Node::default_instance_->InitAsDefaultInstance();
   RotationPoint::default_instance_->InitAsDefaultInstance();
+  AnimationLayer::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_modeldata_2eproto);
 }
 
@@ -487,6 +518,7 @@ const int ModelData::kUpVectorFieldNumber;
 const int ModelData::kControlPointsFieldNumber;
 const int ModelData::kRotationpointsFieldNumber;
 const int ModelData::kNumberOfFramesFieldNumber;
+const int ModelData::kAnimationLayersFieldNumber;
 #endif  // !_MSC_VER
 
 ModelData::ModelData()
@@ -560,6 +592,7 @@ void ModelData::Clear() {
   }
   controlpoints_.Clear();
   rotationpoints_.Clear();
+  animationlayers_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -638,6 +671,20 @@ bool ModelData::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(50)) goto parse_animationLayers;
+        break;
+      }
+
+      // repeated .swellanimations.AnimationLayer animationLayers = 6;
+      case 6: {
+        if (tag == 50) {
+         parse_animationLayers:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_animationlayers()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(50)) goto parse_animationLayers;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -696,6 +743,12 @@ void ModelData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->numberofframes(), output);
   }
 
+  // repeated .swellanimations.AnimationLayer animationLayers = 6;
+  for (int i = 0; i < this->animationlayers_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      6, this->animationlayers(i), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -737,6 +790,13 @@ void ModelData::SerializeWithCachedSizes(
   // required int32 numberOfFrames = 5;
   if (has_numberofframes()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->numberofframes(), target);
+  }
+
+  // repeated .swellanimations.AnimationLayer animationLayers = 6;
+  for (int i = 0; i < this->animationlayers_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        6, this->animationlayers(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -789,6 +849,14 @@ int ModelData::ByteSize() const {
         this->rotationpoints(i));
   }
 
+  // repeated .swellanimations.AnimationLayer animationLayers = 6;
+  total_size += 1 * this->animationlayers_size();
+  for (int i = 0; i < this->animationlayers_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->animationlayers(i));
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -816,6 +884,7 @@ void ModelData::MergeFrom(const ModelData& from) {
   GOOGLE_CHECK_NE(&from, this);
   controlpoints_.MergeFrom(from.controlpoints_);
   rotationpoints_.MergeFrom(from.rotationpoints_);
+  animationlayers_.MergeFrom(from.animationlayers_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_model()) {
       mutable_model()->::swellanimations::Node::MergeFrom(from.model());
@@ -853,6 +922,7 @@ bool ModelData::IsInitialized() const {
   }
   if (!::google::protobuf::internal::AllAreInitialized(this->controlpoints())) return false;
   if (!::google::protobuf::internal::AllAreInitialized(this->rotationpoints())) return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->animationlayers())) return false;
   return true;
 }
 
@@ -863,6 +933,7 @@ void ModelData::Swap(ModelData* other) {
     controlpoints_.Swap(&other->controlpoints_);
     rotationpoints_.Swap(&other->rotationpoints_);
     std::swap(numberofframes_, other->numberofframes_);
+    animationlayers_.Swap(&other->animationlayers_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -1931,6 +2002,322 @@ void RotationPoint::Swap(RotationPoint* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = RotationPoint_descriptor_;
   metadata.reflection = RotationPoint_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int AnimationLayer::kLayerPointsFieldNumber;
+const int AnimationLayer::kNumFramesFieldNumber;
+const int AnimationLayer::kStartFrameFieldNumber;
+#endif  // !_MSC_VER
+
+AnimationLayer::AnimationLayer()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:swellanimations.AnimationLayer)
+}
+
+void AnimationLayer::InitAsDefaultInstance() {
+}
+
+AnimationLayer::AnimationLayer(const AnimationLayer& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:swellanimations.AnimationLayer)
+}
+
+void AnimationLayer::SharedCtor() {
+  _cached_size_ = 0;
+  numframes_ = 0;
+  startframe_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+AnimationLayer::~AnimationLayer() {
+  // @@protoc_insertion_point(destructor:swellanimations.AnimationLayer)
+  SharedDtor();
+}
+
+void AnimationLayer::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void AnimationLayer::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* AnimationLayer::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return AnimationLayer_descriptor_;
+}
+
+const AnimationLayer& AnimationLayer::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_modeldata_2eproto();
+  return *default_instance_;
+}
+
+AnimationLayer* AnimationLayer::default_instance_ = NULL;
+
+AnimationLayer* AnimationLayer::New() const {
+  return new AnimationLayer;
+}
+
+void AnimationLayer::Clear() {
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<AnimationLayer*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  ZR_(numframes_, startframe_);
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
+  layerpoints_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool AnimationLayer::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:swellanimations.AnimationLayer)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated .swellanimations.Vector layerPoints = 1;
+      case 1: {
+        if (tag == 10) {
+         parse_layerPoints:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_layerpoints()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(10)) goto parse_layerPoints;
+        if (input->ExpectTag(16)) goto parse_numFrames;
+        break;
+      }
+
+      // required int32 numFrames = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_numFrames:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &numframes_)));
+          set_has_numframes();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_startFrame;
+        break;
+      }
+
+      // required int32 startFrame = 3;
+      case 3: {
+        if (tag == 24) {
+         parse_startFrame:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &startframe_)));
+          set_has_startframe();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:swellanimations.AnimationLayer)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:swellanimations.AnimationLayer)
+  return false;
+#undef DO_
+}
+
+void AnimationLayer::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:swellanimations.AnimationLayer)
+  // repeated .swellanimations.Vector layerPoints = 1;
+  for (int i = 0; i < this->layerpoints_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->layerpoints(i), output);
+  }
+
+  // required int32 numFrames = 2;
+  if (has_numframes()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->numframes(), output);
+  }
+
+  // required int32 startFrame = 3;
+  if (has_startframe()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->startframe(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:swellanimations.AnimationLayer)
+}
+
+::google::protobuf::uint8* AnimationLayer::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:swellanimations.AnimationLayer)
+  // repeated .swellanimations.Vector layerPoints = 1;
+  for (int i = 0; i < this->layerpoints_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->layerpoints(i), target);
+  }
+
+  // required int32 numFrames = 2;
+  if (has_numframes()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->numframes(), target);
+  }
+
+  // required int32 startFrame = 3;
+  if (has_startframe()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->startframe(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:swellanimations.AnimationLayer)
+  return target;
+}
+
+int AnimationLayer::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+    // required int32 numFrames = 2;
+    if (has_numframes()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->numframes());
+    }
+
+    // required int32 startFrame = 3;
+    if (has_startframe()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->startframe());
+    }
+
+  }
+  // repeated .swellanimations.Vector layerPoints = 1;
+  total_size += 1 * this->layerpoints_size();
+  for (int i = 0; i < this->layerpoints_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->layerpoints(i));
+  }
+
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void AnimationLayer::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const AnimationLayer* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const AnimationLayer*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void AnimationLayer::MergeFrom(const AnimationLayer& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  layerpoints_.MergeFrom(from.layerpoints_);
+  if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+    if (from.has_numframes()) {
+      set_numframes(from.numframes());
+    }
+    if (from.has_startframe()) {
+      set_startframe(from.startframe());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void AnimationLayer::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void AnimationLayer::CopyFrom(const AnimationLayer& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool AnimationLayer::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000006) != 0x00000006) return false;
+
+  if (!::google::protobuf::internal::AllAreInitialized(this->layerpoints())) return false;
+  return true;
+}
+
+void AnimationLayer::Swap(AnimationLayer* other) {
+  if (other != this) {
+    layerpoints_.Swap(&other->layerpoints_);
+    std::swap(numframes_, other->numframes_);
+    std::swap(startframe_, other->startframe_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata AnimationLayer::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = AnimationLayer_descriptor_;
+  metadata.reflection = AnimationLayer_reflection_;
   return metadata;
 }
 

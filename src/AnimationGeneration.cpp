@@ -14,7 +14,7 @@
 #include "modeldata.pb.h"
 #include "point.h"
 #include "hermite.cpp"
-#include "diff_hermite.c"
+#include "diff_hermite.h"
 
 using namespace swellanimations;
 using namespace std;
@@ -42,15 +42,35 @@ double furthestNodeDistance(Node root) {
     return max;
 }
 
+double getDistanceFromModelVectors(Vector* p1, Vector* p2) {
+	float diffY = p1->y() - p2->y();
+	float diffX = p1->x() - p2->x();
+	float diffZ = p1->z() - p2->z();
+	return sqrt((diffY * diffY) + (diffX * diffX) + (diffZ * diffZ));
+}
+
+/* returns the length of the model by adding the distances between joints */
+double getModelLength(Node* model) {
+	double length = 0;
+	while (model->children_size() > 0) {
+		//We are assuming only 1 child per node.  Currently that is all we send.
+		Node* child = model->mutable_children(0);
+		length += getDistanceFromModelVectors(model->mutable_position(), child->mutable_position());
+		model = child;
+	}
+	return length;
+}
+
 /* returns the indices in the spline that correspond to joints of the model in the first frame */
 /* maps the points in the spline to the joints in the model based on the length of the model 
     and how many points in the spline will make up a single frame */
-vector<int> mapPoints(Node root, double pointsPerFrame, double modelLength) {
+vector<int> mapPoints(Node* root, int maxIndexOnStartFrame, double modelLength) {
     vector<int> total;
-    int corresponding = ((double)fabs(root.mutable_position()->z()) / modelLength ) * pointsPerFrame;
-    total.push_back(corresponding);
-    for (int i = 0; i < root.children_size(); i++) {
-        vector<int> c = mapPoints(root.children(i), pointsPerFrame, modelLength);
+	float distanceRatioFromFront = getModelLength(root) / modelLength;
+	int correspondingIndex = distanceRatioFromFront * maxIndexOnStartFrame;
+	total.push_back(correspondingIndex);
+    for (int i = 0; i < root->children_size(); i++) {
+		vector<int> c = mapPoints(root->mutable_children(i), maxIndexOnStartFrame, modelLength);
         for (int j = 0; j < c.size(); j++) {
             total.push_back(c.at(j));
         }
@@ -60,9 +80,9 @@ vector<int> mapPoints(Node root, double pointsPerFrame, double modelLength) {
 
 /* returns a new tree (frame) with new positions based on the calculated corresponding points in the spline */
 /* when called in succession, it moves the model and all of its joints along the spline */
-Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index){ //, ofstream *myfile) {
+Node jointsToSpline(Node* root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index){ //, ofstream *myfile) {
     Node frame;
-	frame.set_name(root.name());
+	frame.set_name(root->name());
     
     int c = correspondingPoints.at(index);
     struct pt* s = spline.at(c);
@@ -141,31 +161,13 @@ Node jointsToSpline(Node root, vector<struct pt*> spline, vector<int> correspond
     //*myfile << root.name() << endl;
     //*myfile << frame.mutable_position()->z() << endl;
 
-    for (int i = 0; i < root.children_size(); i++) {
-        Node tmp = jointsToSpline(root.children(i), spline, correspondingPoints, ++index); //, myfile);
-        tmp.set_name(root.children(i).name());
+    for (int i = 0; i < root->children_size(); i++) {
+		Node tmp = jointsToSpline(root->mutable_children(i), spline, correspondingPoints, ++index); //, myfile);
+		tmp.set_name(root->children(i).name());
         Node* p = frame.add_children();
         p->CopyFrom(tmp);
     }
     return frame;
-}
-
-/* returns the length of the model by adding the distances between joints */
-double getModelLength(ModelData* modelData) {
-    double length = 0;
-    Node model = modelData->model();
-    // call furthestNodeDistance on the root node of the model
-    length = furthestNodeDistance(model);
-    return length;
-}
-
-/* computes the constant b:
-    the ratio between spline length and model length */
-double calculateB(ModelData* modelData, vector<struct pt*> spline) {
-    double splineLength = getSplineLength(spline);
-    double modelLength = getModelLength(modelData);
-    double b = modelLength / (splineLength); // just testing * 1.5);
-    return b;
 }
 
 /* uses hermite.cpp to calculate a spline based on control points */
@@ -236,21 +238,19 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     //myfile.open ("/home/psarahdactyl/Documents/bbfunfunfun.txt");
 
     // calculate the constant b
-    double b = calculateB(modelData, spline);
-    double modelLength = getModelLength(modelData);
+	double modelLength = getModelLength(modelData->mutable_model());
+	double splineLength = getSplineLength(spline);
+	double b = modelLength / (splineLength);
 
     // calculate points in spline per frame
     double pointsPerFrame = spline.size() * b;
     //myfile << pointsPerFrame << endl;
 
     // calculate which point goes with which joint
-    Node root = modelData->model();
+    Node* root = modelData->mutable_model();
 
     // maps points from user drawn curve -- now a spline -- to the joints in the model
-    vector<int> correspondingPoints = mapPoints(root, pointsPerFrame, modelLength);
-    
-    //they are backwards, don't know why but I fixed it
-    reverse(correspondingPoints.begin(), correspondingPoints.end());
+	vector<int> correspondingPoints = mapPoints(root, pointsPerFrame - 1, modelLength);
 
     vector<struct pt*> extra;
 
