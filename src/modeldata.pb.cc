@@ -214,8 +214,8 @@ void protobuf_AddDesc_modeldata_2eproto() {
     "onpoints\030\004 \003(\0132\036.swellanimations.Rotatio"
     "nPoint\022\026\n\016numberOfFrames\030\005 \002(\005\0228\n\017animat"
     "ionLayers\030\006 \003(\0132\037.swellanimations.Animat"
-    "ionLayer\")\n\006Vector\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002"
-    "\022\t\n\001z\030\003 \002(\002\"\275\001\n\004Node\022\014\n\004name\030\001 \001(\t\022)\n\010po"
+    "ionLayer\")\n\006Vector\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001"
+    "\022\t\n\001z\030\003 \002(\001\"\275\001\n\004Node\022\014\n\004name\030\001 \001(\t\022)\n\010po"
     "sition\030\002 \001(\0132\027.swellanimations.Vector\022,\n"
     "\013eularAngles\030\003 \001(\0132\027.swellanimations.Vec"
     "tor\022\'\n\010children\030\004 \003(\0132\025.swellanimations."
@@ -1042,41 +1042,41 @@ bool Vector::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required float x = 1;
+      // required double x = 1;
       case 1: {
-        if (tag == 13) {
+        if (tag == 9) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &x_)));
           set_has_x();
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(21)) goto parse_y;
+        if (input->ExpectTag(17)) goto parse_y;
         break;
       }
 
-      // required float y = 2;
+      // required double y = 2;
       case 2: {
-        if (tag == 21) {
+        if (tag == 17) {
          parse_y:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &y_)));
           set_has_y();
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(29)) goto parse_z;
+        if (input->ExpectTag(25)) goto parse_z;
         break;
       }
 
-      // required float z = 3;
+      // required double z = 3;
       case 3: {
-        if (tag == 29) {
+        if (tag == 25) {
          parse_z:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
                  input, &z_)));
           set_has_z();
         } else {
@@ -1111,19 +1111,19 @@ failure:
 void Vector::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:swellanimations.Vector)
-  // required float x = 1;
+  // required double x = 1;
   if (has_x()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->x(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(1, this->x(), output);
   }
 
-  // required float y = 2;
+  // required double y = 2;
   if (has_y()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->y(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(2, this->y(), output);
   }
 
-  // required float z = 3;
+  // required double z = 3;
   if (has_z()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->z(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(3, this->z(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1136,19 +1136,19 @@ void Vector::SerializeWithCachedSizes(
 ::google::protobuf::uint8* Vector::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:swellanimations.Vector)
-  // required float x = 1;
+  // required double x = 1;
   if (has_x()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->x(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(1, this->x(), target);
   }
 
-  // required float y = 2;
+  // required double y = 2;
   if (has_y()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->y(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(2, this->y(), target);
   }
 
-  // required float z = 3;
+  // required double z = 3;
   if (has_z()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->z(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(3, this->z(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1163,19 +1163,19 @@ int Vector::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required float x = 1;
+    // required double x = 1;
     if (has_x()) {
-      total_size += 1 + 4;
+      total_size += 1 + 8;
     }
 
-    // required float y = 2;
+    // required double y = 2;
     if (has_y()) {
-      total_size += 1 + 4;
+      total_size += 1 + 8;
     }
 
-    // required float z = 3;
+    // required double z = 3;
     if (has_z()) {
-      total_size += 1 + 4;
+      total_size += 1 + 8;
     }
 
   }

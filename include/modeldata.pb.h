@@ -332,26 +332,26 @@ class Vector : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required float x = 1;
+  // required double x = 1;
   inline bool has_x() const;
   inline void clear_x();
   static const int kXFieldNumber = 1;
-  inline float x() const;
-  inline void set_x(float value);
+  inline double x() const;
+  inline void set_x(double value);
 
-  // required float y = 2;
+  // required double y = 2;
   inline bool has_y() const;
   inline void clear_y();
   static const int kYFieldNumber = 2;
-  inline float y() const;
-  inline void set_y(float value);
+  inline double y() const;
+  inline void set_y(double value);
 
-  // required float z = 3;
+  // required double z = 3;
   inline bool has_z() const;
   inline void clear_z();
   static const int kZFieldNumber = 3;
-  inline float z() const;
-  inline void set_z(float value);
+  inline double z() const;
+  inline void set_z(double value);
 
   // @@protoc_insertion_point(class_scope:swellanimations.Vector)
  private:
@@ -366,9 +366,9 @@ class Vector : public ::google::protobuf::Message {
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  float x_;
-  float y_;
-  float z_;
+  double x_;
+  double y_;
+  double z_;
   friend void  protobuf_AddDesc_modeldata_2eproto();
   friend void protobuf_AssignDesc_modeldata_2eproto();
   friend void protobuf_ShutdownFile_modeldata_2eproto();
@@ -983,7 +983,7 @@ ModelData::mutable_animationlayers() {
 
 // Vector
 
-// required float x = 1;
+// required double x = 1;
 inline bool Vector::has_x() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -997,17 +997,17 @@ inline void Vector::clear_x() {
   x_ = 0;
   clear_has_x();
 }
-inline float Vector::x() const {
+inline double Vector::x() const {
   // @@protoc_insertion_point(field_get:swellanimations.Vector.x)
   return x_;
 }
-inline void Vector::set_x(float value) {
+inline void Vector::set_x(double value) {
   set_has_x();
   x_ = value;
   // @@protoc_insertion_point(field_set:swellanimations.Vector.x)
 }
 
-// required float y = 2;
+// required double y = 2;
 inline bool Vector::has_y() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1021,17 +1021,17 @@ inline void Vector::clear_y() {
   y_ = 0;
   clear_has_y();
 }
-inline float Vector::y() const {
+inline double Vector::y() const {
   // @@protoc_insertion_point(field_get:swellanimations.Vector.y)
   return y_;
 }
-inline void Vector::set_y(float value) {
+inline void Vector::set_y(double value) {
   set_has_y();
   y_ = value;
   // @@protoc_insertion_point(field_set:swellanimations.Vector.y)
 }
 
-// required float z = 3;
+// required double z = 3;
 inline bool Vector::has_z() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -1045,11 +1045,11 @@ inline void Vector::clear_z() {
   z_ = 0;
   clear_has_z();
 }
-inline float Vector::z() const {
+inline double Vector::z() const {
   // @@protoc_insertion_point(field_get:swellanimations.Vector.z)
   return z_;
 }
-inline void Vector::set_z(float value) {
+inline void Vector::set_z(double value) {
   set_has_z();
   z_ = value;
   // @@protoc_insertion_point(field_set:swellanimations.Vector.z)
