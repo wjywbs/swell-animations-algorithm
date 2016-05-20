@@ -1,7 +1,7 @@
 # Swell-Animations Algorithm
 This repo contains the backend which will generate the animation.
 
-[![Build Status](http://vps73020.vps.ovh.ca:8080/job/backend/badge/icon)](http://vps73020.vps.ovh.ca:8080/job/backend/)
+[![Build Status](http://vps73020.vps.ovh.ca:8080/buildStatus/icon?job=backend)](http://vps73020.vps.ovh.ca:8080/job/backend/)
 
 ## Usage:
 ##### Linux
