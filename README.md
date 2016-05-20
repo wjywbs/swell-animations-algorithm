@@ -1,7 +1,7 @@
 # Swell-Animations Algorithm
 This repo contains the backend which will generate the animation.
 
-[![Build Status](http://vps73020.vps.ovh.ca:8080/buildStatus/icon?job=backend)](http://vps73020.vps.ovh.ca:8080/job/backend/)
+[![Build Status](http://vps73020.vps.ovh.ca:8080/buildStatus/icon?job=backend)](http://vps73020.vps.ovh.ca:8080/job/backend/)[![Test Status](http://vps73020.vps.ovh.ca:8080/buildStatus/icon?job=backend-unit-test)](http://vps73020.vps.ovh.ca:8080/job/backend-unit-test/)
 
 ## Usage:
 ##### Linux
@@ -19,7 +19,7 @@ make protobuf-cpp
 ```
 
 ## Builds:
-https://vps73020.vps.ovh.ca:8443/job/backend/ws/bin/
+http://vps73020.vps.ovh.ca:8080/job/backend/ws/bin/
 
 ## Jenkins unit test:
-https://vps73020.vps.ovh.ca:8443/job/backend-unit-test/
+http://vps73020.vps.ovh.ca:8080/job/backend-unit-test/
