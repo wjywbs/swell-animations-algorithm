@@ -1,6 +1,6 @@
 // AnimationGeneration.cpp - backend animation generation functions
 // Author: Sarah
-// Date last updated: 05/12/2016
+// Date last updated: 05/22/2016
 //
 #include <fstream>
 #include <iomanip>
@@ -67,7 +67,7 @@ double getModelLength(Node* model) {
 vector<int> mapPoints(Node* root, int maxIndexOnStartFrame, double modelLength) {
     vector<int> total;
 	float distanceRatioFromFront = getModelLength(root) / modelLength;
-	int correspondingIndex = distanceRatioFromFront * maxIndexOnStartFrame;
+	int correspondingIndex = round(distanceRatioFromFront * maxIndexOnStartFrame);
 	total.push_back(correspondingIndex);
     for (int i = 0; i < root->children_size(); i++) {
 		vector<int> c = mapPoints(root->mutable_children(i), maxIndexOnStartFrame, modelLength);
@@ -80,9 +80,10 @@ vector<int> mapPoints(Node* root, int maxIndexOnStartFrame, double modelLength) 
 
 /* returns a new tree (frame) with new positions based on the calculated corresponding points in the spline */
 /* when called in succession, it moves the model and all of its joints along the spline */
-Node jointsToSpline(Node* root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index){ //, ofstream *myfile) {
+Node jointsToSpline(Node* root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index, ofstream *myfile) {
     Node frame;
 	frame.set_name(root->name());
+    //*myfile << frame.name() << endl;
     
     int c = correspondingPoints.at(index);
     struct pt* s = spline.at(c);
@@ -93,6 +94,7 @@ Node jointsToSpline(Node* root, vector<struct pt*> spline, vector<int> correspon
 
     struct pt* s0;
     struct pt* s2;
+    struct pt* m0;
 
     if (c == 0)
     {
@@ -106,6 +108,7 @@ Node jointsToSpline(Node* root, vector<struct pt*> spline, vector<int> correspon
         x2 = s2->x; 
         y2 = s2->y; 
         z2 = s2->z;
+        m0 = forwardDiff(s, s2);
     }
     else if (c == spline.size()-1)
     {
@@ -119,6 +122,7 @@ Node jointsToSpline(Node* root, vector<struct pt*> spline, vector<int> correspon
         x2 = s->x; 
         y2 = s->y; 
         z2 = s->z; 
+        m0 = forwardDiff(s0, s);
     }
     else
     {
@@ -133,36 +137,23 @@ Node jointsToSpline(Node* root, vector<struct pt*> spline, vector<int> correspon
         x2 = s2->x; 
         y2 = s2->y; 
         z2 = s2->z; 
-    
+        m0 = midpointDiff(s0, s, s2);
     }
-    double t = 0.5;
-    struct Direction *d = (Direction*)calloc(1, sizeof(struct Direction));
-    Differentiate(x0, x1, x2, t, &(d->x));
-    Differentiate(y0, y1, y2, t, &(d->y));
-    Differentiate(z0, z1, z2, t, &(d->z));
-
-    float x = d->x;
-    float y = d->y;
-    float z = d->z;
-
-    float r = sqrt(x*x + y*y + z*z);
-    float u = atan(y/x);
-    float p = acos(z/r);
 
     frame.mutable_position()->set_x(s->x);
     frame.mutable_position()->set_y(s->y);
     frame.mutable_position()->set_z(s->z);
 
-    frame.mutable_eularangles()->set_x(r);
-    frame.mutable_eularangles()->set_y(u);
-    frame.mutable_eularangles()->set_z(p);
+    frame.mutable_eularangles()->set_x(m0->x);
+    frame.mutable_eularangles()->set_y(m0->y);
+    frame.mutable_eularangles()->set_z(m0->z);
 
     //*myfile << "-- ";
     //*myfile << root.name() << endl;
     //*myfile << frame.mutable_position()->z() << endl;
 
     for (int i = 0; i < root->children_size(); i++) {
-		Node tmp = jointsToSpline(root->mutable_children(i), spline, correspondingPoints, ++index); //, myfile);
+		Node tmp = jointsToSpline(root->mutable_children(i), spline, correspondingPoints, ++index, myfile);
 		tmp.set_name(root->children(i).name());
         Node* p = frame.add_children();
         p->CopyFrom(tmp);
@@ -234,8 +225,8 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
 // TODO: get the time it takes the user to draw the LOA, going to need the control points dropped at intervals
 Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     Animation* animation = new Animation();
-    //ofstream myfile;
-    //myfile.open ("/home/psarahdactyl/Documents/bbfunfunfun.txt");
+    ofstream myfile;
+    //myfile.open ("/home/psarahdactyl/Documents/ccfunfunfun.txt");
 
     // calculate the constant b
 	double modelLength = getModelLength(modelData->mutable_model());
@@ -250,7 +241,11 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     Node* root = modelData->mutable_model();
 
     // maps points from user drawn curve -- now a spline -- to the joints in the model
-	vector<int> correspondingPoints = mapPoints(root, pointsPerFrame - 1, modelLength);
+	vector<int> correspondingPoints = mapPoints(root, pointsPerFrame, modelLength);
+    for(int h = 0; h < correspondingPoints.size(); h++)
+    {
+        myfile << correspondingPoints.at(h) << endl;
+    }
 
     vector<struct pt*> extra;
 
@@ -279,7 +274,8 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     for (int i = 0; i < newSpline.size() - pointsPerFrame; i++) {
         int index = 0;
         // move model and its joints
-        Node frame = jointsToSpline(root, newSpline, correspondingPoints, index); //, &myfile);
+        Node frame = jointsToSpline(root, newSpline, correspondingPoints, index,  &myfile);
+	    frame.set_name(root->name());
 
         // go through the mapped joints on the model and move them up by 1
         // since we are on a new frame
@@ -293,6 +289,7 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
         // add frames to the animation
         Node* a = animation->add_frames();
         a->CopyFrom(frame);
+	    a->set_name(root->name());
     }
 
     return animation;
