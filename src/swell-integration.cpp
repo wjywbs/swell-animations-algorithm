@@ -27,7 +27,7 @@ void* generateAnimation(char* a, int size, unsigned int& responseSize) {
     Animation* animation = getFrames(modelData);
 
     //Call layering
-    //AddLayering(modelData, animation);
+    AddLayering(modelData, animation);
 
     responseSize = animation->ByteSize();
     void* response = malloc(responseSize);

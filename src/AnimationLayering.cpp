@@ -160,16 +160,21 @@ void Morph(Node *frames, AnimationLayer* layer, int dloa_size, int dist_to_dloa)
 }
 
 void AddLayering(ModelData *modelData, Animation *animation) {
+	ofstream out("/tmp/stufff");
+	out << "OMG DO I GET HERE\n";
 	for(int i=0; i < modelData->animationlayers_size(); i++) {
+		out << "OMG DO I GET HERE NOW\n";
 		for(int j = modelData->animationlayers(i).startframe();
 		    j < modelData->animationlayers(i).startframe() +
 		   	 modelData->animationlayers(i).numframes();
 		    j++) {
+			out << "WHAT ABOUT NOW?\n";
 			Morph(	animation->mutable_frames(j),
 				modelData->mutable_animationlayers(i),
 				modelData->animationlayers(i).layerpoints_size(),
 				modelData->animationlayers(i).startframe() + modelData->animationlayers(i).numframes() - j
 			     );
+			out << "NOW??\n";
 		} // end frame counter
 	} // end layer counter
 }
