@@ -15,6 +15,7 @@
 #include "point.h"
 #include "hermite.cpp"
 #include "diff_hermite.h"
+#include "AnimationLayering.cpp"
 
 using namespace swellanimations;
 using namespace std;
@@ -358,6 +359,9 @@ Animation* getFrames(ModelData* modelData) {
     animation = evaluateDLOA(modelData, spline);
 	// apply rotation points to the model data
 	applyRotationPoints(modelData);
+
+	//Call layering
+	AddLayering(modelData, animation);
 	//set the spline in the return animation
 	copySplineToAnimation(spline, animation);
 	return animation;
