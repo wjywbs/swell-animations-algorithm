@@ -84,8 +84,10 @@ void MoveVector(Vector* a_model, Vector* b_model, Vector* a_spline, Vector* b_sp
 	double new_x = b_model->x() + (cos(theta_spline)/(dist_to_dloa == 0? 1 : (double)dist_to_dloa));
 	double new_y = b_model->y() + (sin(theta_spline)/(dist_to_dloa == 0? 1 : (double)dist_to_dloa));
 
-	b_model->set_x(new_x);
-	b_model->set_y(new_y);
+//b_model->set_x(new_x);
+//	b_model->set_y(new_y);
+	b_model->set_x(999);
+	b_model->set_y(999);
 }
 
 /*vector<pt> Morph(vector<pt> detail, vector<pt> model) {
@@ -116,6 +118,7 @@ void Morph(Node *frames, AnimationLayer* layer, int dloa_size, int dist_to_dloa)
 	Node *temp = nextchild;
 	while(temp->children_size() > 0) {
 		childcount++;
+		temp = temp->mutable_children(0);
 	}
 	childrenleft = childcount;
 	temp = NULL;
@@ -161,20 +164,20 @@ void Morph(Node *frames, AnimationLayer* layer, int dloa_size, int dist_to_dloa)
 
 void AddLayering(ModelData *modelData, Animation *animation) {
 	ofstream out("/tmp/stufff");
-	out << "OMG DO I GET HERE\n";
+	out << "OMG DO I GET HERE" << endl;
 	for(int i=0; i < modelData->animationlayers_size(); i++) {
-		out << "OMG DO I GET HERE NOW\n";
+		out << "OMG DO I GET HERE NOW" << endl;
 		for(int j = modelData->animationlayers(i).startframe();
 		    j < modelData->animationlayers(i).startframe() +
 		   	 modelData->animationlayers(i).numframes();
 		    j++) {
-			out << "WHAT ABOUT NOW?\n";
+			out << "WHAT ABOUT NOW?" << endl;
 			Morph(	animation->mutable_frames(j),
 				modelData->mutable_animationlayers(i),
 				modelData->animationlayers(i).layerpoints_size(),
 				modelData->animationlayers(i).startframe() + modelData->animationlayers(i).numframes() - j
 			     );
-			out << "NOW??\n";
+			out << "NOW??" << endl;
 		} // end frame counter
 	} // end layer counter
 }

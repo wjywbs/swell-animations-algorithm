@@ -360,8 +360,10 @@ Animation* getFrames(ModelData* modelData) {
 	// apply rotation points to the model data
 	applyRotationPoints(modelData);
 
-	//Call layering
-	AddLayering(modelData, animation);
+	if(modelData->animationlayers_size() > 0) {
+		//Call layering
+		AddLayering(modelData, animation);
+	}
 	//set the spline in the return animation
 	copySplineToAnimation(spline, animation);
 	return animation;
