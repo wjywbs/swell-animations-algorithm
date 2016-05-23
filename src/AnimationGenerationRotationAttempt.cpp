@@ -98,18 +98,45 @@ Node jointsToSpline(Node* root, vector<struct pt*> spline, vector<int> correspon
 
     if (c == 0)
     {
+        x0 = s->x; 
+        y0 = s->y; 
+        z0 = s->z; 
         s2 = spline.at(c+1);
+        x1 = (s->x + s2->x) / 2; 
+        y1 = (s->y + s2->y) / 2; 
+        z1 = (s->z + s2->z) / 2; 
+        x2 = s2->x; 
+        y2 = s2->y; 
+        z2 = s2->z;
         m0 = forwardDiff(s, s2);
     }
     else if (c == spline.size()-1)
     {
         s0 = spline.at(c-1);
+        x0 = s0->x; 
+        y0 = s0->y; 
+        z0 = s0->z; 
+        x1 = (s->x + s0->x) / 2; 
+        y1 = (s->y + s0->y) / 2; 
+        z1 = (s->z + s0->z) / 2; 
+        x2 = s->x; 
+        y2 = s->y; 
+        z2 = s->z; 
         m0 = forwardDiff(s0, s);
     }
     else
     {
         s0 = spline.at(c-1);
         s2 = spline.at(c+1);
+        x0 = s0->x; 
+        y0 = s0->y; 
+        z0 = s0->z; 
+        x1 = s->x; 
+        y1 = s->y; 
+        z1 = s->z; 
+        x2 = s2->x; 
+        y2 = s2->y; 
+        z2 = s2->z; 
         m0 = midpointDiff(s0, s, s2);
     }
 
@@ -121,9 +148,11 @@ Node jointsToSpline(Node* root, vector<struct pt*> spline, vector<int> correspon
     frame.mutable_eularangles()->set_y(m0->y);
     frame.mutable_eularangles()->set_z(m0->z);
 
-    //*myfile << "-- ";
-    //*myfile << root.name() << endl;
-    //*myfile << frame.mutable_position()->z() << endl;
+    *myfile << "-- ";
+    *myfile << root->name() << endl;
+    *myfile << m0->x << endl;
+    *myfile << m0->y << endl;
+    *myfile << m0->z << endl;
 
     for (int i = 0; i < root->children_size(); i++) {
 		Node tmp = jointsToSpline(root->mutable_children(i), spline, correspondingPoints, ++index, myfile);
@@ -199,16 +228,25 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
 Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     Animation* animation = new Animation();
     ofstream myfile;
-    //myfile.open ("/home/psarahdactyl/Documents/ccfunfunfun.txt");
+    myfile.open ("/home/psarahdactyl/Documents/ccfunfunfun.txt");
+    spline.clear();
+    for(int i = 0; i < 100; i+=1)
+    {
+        spline.push_back(createPoint(i, 0, 0));
+    }
 
     // calculate the constant b
 	double modelLength = getModelLength(modelData->mutable_model());
 	double splineLength = getSplineLength(spline);
+    myfile << "ml " << modelLength << endl;
+    myfile << "sl " << splineLength << endl;
 	double b = modelLength / (splineLength);
+    myfile << "b " << b << endl;
 
     // calculate points in spline per frame
     double pointsPerFrame = spline.size() * b;
-    //myfile << pointsPerFrame << endl;
+    myfile << "ss: " << spline.size() << endl;
+    myfile << "ppf: " << pointsPerFrame << endl;
 
     // calculate which point goes with which joint
     Node* root = modelData->mutable_model();
@@ -261,7 +299,11 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
 
         // add frames to the animation
         Node* a = animation->add_frames();
-        a->CopyFrom(frame);
+        Node parent;
+        Node* p = parent.add_children();
+        parent.CopyFrom(frame);
+        p->CopyFrom(frame);
+        a->CopyFrom(parent);
 	    a->set_name(root->name());
     }
 
