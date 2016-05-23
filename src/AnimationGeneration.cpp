@@ -139,14 +139,19 @@ Node jointsToSpline(Node* root, vector<struct pt*> spline, vector<int> correspon
         z2 = s2->z; 
         m0 = midpointDiff(s0, s, s2);
     }
+    double t = 0.5;
+    struct Direction *d = (Direction*)calloc(1, sizeof(struct Direction));
+    Differentiate(x0, x1, x2, t, &(d->x));
+    Differentiate(y0, y1, y2, t, &(d->y));
+    Differentiate(z0, z1, z2, t, &(d->z));
 
     frame.mutable_position()->set_x(s->x);
     frame.mutable_position()->set_y(s->y);
     frame.mutable_position()->set_z(s->z);
 
-    frame.mutable_eularangles()->set_x(m0->x);
-    frame.mutable_eularangles()->set_y(m0->y);
-    frame.mutable_eularangles()->set_z(m0->z);
+    frame.mutable_eularangles()->set_x(d->x);
+    frame.mutable_eularangles()->set_y(d->y);
+    frame.mutable_eularangles()->set_z(d->z);
 
     //*myfile << "-- ";
     //*myfile << root.name() << endl;
