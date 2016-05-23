@@ -1,5 +1,6 @@
 SRCFILES := src/AnimationGeneration.cpp src/hermite.cpp src/swell-integration.cpp
 SRCFILES += src/modeldata.pb.cc src/UnitTests.cpp src/UnitTestLayering.cpp
+SRCFILES += src/UnitTestsAnimationGeneration.cpp
 HEADERS  := include/modeldata.pb.h include/point.h
 
 CXXFLAGS_LINUX := -g -fPIC `pkg-config --cflags --libs protobuf` -Wl,--no-as-needed -ldl
@@ -28,8 +29,10 @@ sarahb: createBin $(SRCFILES) $(HEADERS)
 test: createBin $(SRCFILES) $(HEADERS)
 	g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTests.cpp $(CXXFLAGS_TEST)
 	$(EXEC_TEST)
-	#g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTestLayering.cpp $(CXXFLAGS_TEST)
-	#$(EXEC_TEST)
+	g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTestLayering.cpp bin/swell-animations.so $(CXXFLAGS_TEST)
+	$(EXEC_TEST)
+	g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTestsAnimationGeneration.cpp bin/swell-animations.so $(CXXFLAGS_TEST)
+	$(EXEC_TEST)
 
 createBin:
 	mkdir -p bin
