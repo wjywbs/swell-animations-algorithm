@@ -81,57 +81,89 @@ vector<int> mapPoints(Node* root, int maxIndexOnStartFrame, double modelLength) 
 /* returns a new tree (frame) with new positions based on the calculated corresponding points in the spline */
 /* when called in succession, it moves the model and all of its joints along the spline */
 Node jointsToSpline(Node* root, vector<struct pt*> spline, vector<int> correspondingPoints, int &index, ofstream *myfile) {
-    Node frame;
+	Node frame;
 	frame.set_name(root->name());
-    //*myfile << frame.name() << endl;
-    
-    int c = correspondingPoints.at(index);
-    struct pt* s = spline.at(c);
+	//*myfile << frame.name() << endl;
 
-    double x0, x1, x2;
-    double y0, y1, y2;
-    double z0, z1, z2;
+	int c = correspondingPoints.at(index);
+	struct pt* s = spline.at(c);
 
-    struct pt* s0;
-    struct pt* s2;
-    struct pt* m0;
+	double x0, x1, x2;
+	double y0, y1, y2;
+	double z0, z1, z2;
 
-    if (c == 0)
-    {
-        s2 = spline.at(c+1);
-        m0 = forwardDiff(s, s2);
-    }
-    else if (c == spline.size()-1)
-    {
-        s0 = spline.at(c-1);
-        m0 = forwardDiff(s0, s);
-    }
-    else
-    {
-        s0 = spline.at(c-1);
-        s2 = spline.at(c+1);
-        m0 = midpointDiff(s0, s, s2);
-    }
+	struct pt* s0;
+	struct pt* s2;
+	struct pt* m0;
 
-    frame.mutable_position()->set_x(s->x);
-    frame.mutable_position()->set_y(s->y);
-    frame.mutable_position()->set_z(s->z);
+	if (c == 0)
+	{
+		x0 = s->x;
+		y0 = s->y;
+		z0 = s->z;
+		s2 = spline.at(c + 1);
+		x1 = (s->x + s2->x) / 2;
+		y1 = (s->y + s2->y) / 2;
+		z1 = (s->z + s2->z) / 2;
+		x2 = s2->x;
+		y2 = s2->y;
+		z2 = s2->z;
+		m0 = forwardDiff(s, s2);
+	}
+	else if (c == spline.size() - 1)
+	{
+		s0 = spline.at(c - 1);
+		x0 = s0->x;
+		y0 = s0->y;
+		z0 = s0->z;
+		x1 = (s->x + s0->x) / 2;
+		y1 = (s->y + s0->y) / 2;
+		z1 = (s->z + s0->z) / 2;
+		x2 = s->x;
+		y2 = s->y;
+		z2 = s->z;
+		m0 = forwardDiff(s0, s);
+	}
+	else
+	{
+		s0 = spline.at(c - 1);
+		s2 = spline.at(c + 1);
+		x0 = s0->x;
+		y0 = s0->y;
+		z0 = s0->z;
+		x1 = s->x;
+		y1 = s->y;
+		z1 = s->z;
+		x2 = s2->x;
+		y2 = s2->y;
+		z2 = s2->z;
+		m0 = midpointDiff(s0, s, s2);
+	}
+	double t = 0.5;
+	struct Direction *d = (Direction*)calloc(1, sizeof(struct Direction));
+	Differentiate(x0, x1, x2, t, &(d->x));
+	Differentiate(y0, y1, y2, t, &(d->y));
+	Differentiate(z0, z1, z2, t, &(d->z));
 
-    frame.mutable_eularangles()->set_x(m0->x);
-    frame.mutable_eularangles()->set_y(m0->y);
-    frame.mutable_eularangles()->set_z(m0->z);
+	frame.mutable_position()->set_x(s->x);
+	frame.mutable_position()->set_y(s->y);
+	frame.mutable_position()->set_z(s->z);
 
-    //*myfile << "-- ";
-    //*myfile << root.name() << endl;
-    //*myfile << frame.mutable_position()->z() << endl;
+	frame.mutable_eularangles()->set_x(d->x);
+	frame.mutable_eularangles()->set_y(d->y);
+	frame.mutable_eularangles()->set_z(d->z);
 
-    for (int i = 0; i < root->children_size(); i++) {
+	//*myfile << "-- ";
+	//*myfile << root.name() << endl;
+	//*myfile << frame.mutable_position()->z() << endl;
+
+	for (int i = 0; i < root->children_size(); i++) {
 		Node tmp = jointsToSpline(root->mutable_children(i), spline, correspondingPoints, ++index, myfile);
 		tmp.set_name(root->children(i).name());
-        Node* p = frame.add_children();
-        p->CopyFrom(tmp);
-    }
-    return frame;
+		Node* p = frame.add_children();
+		p->CopyFrom(tmp);
+	}
+	return frame;
 }
 
 /* uses hermite.cpp to calculate a spline based on control points */
@@ -311,9 +343,9 @@ void applyRotationPoints(ModelData* modelData) {
 
 		// For each frame between the start and end frame, modify the eular angles by the appropriate value stored in the rotationAngles vector
 		for (int j = startframe; j <= endframe; j++) {
-			model.mutable_eularangles()->set_x(model.mutable_eularangles()->x() + rotationAngles.at(i)->x);
-			model.mutable_eularangles()->set_y(model.mutable_eularangles()->y() + rotationAngles.at(i)->y);
-			model.mutable_eularangles()->set_z(model.mutable_eularangles()->z() + rotationAngles.at(i)->z);
+			model.mutable_rotation()->set_x(rotationAngles.at(i)->x);
+			model.mutable_rotation()->set_y(rotationAngles.at(i)->y);
+			model.mutable_rotation()->set_z(rotationAngles.at(i)->z);
 		}
 	}
 }

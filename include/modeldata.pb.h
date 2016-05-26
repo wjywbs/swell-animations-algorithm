@@ -482,6 +482,15 @@ class Node : public ::google::protobuf::Message {
   inline ::swellanimations::Node* release_parent();
   inline void set_allocated_parent(::swellanimations::Node* parent);
 
+  // optional .swellanimations.Vector rotation = 6;
+  inline bool has_rotation() const;
+  inline void clear_rotation();
+  static const int kRotationFieldNumber = 6;
+  inline const ::swellanimations::Vector& rotation() const;
+  inline ::swellanimations::Vector* mutable_rotation();
+  inline ::swellanimations::Vector* release_rotation();
+  inline void set_allocated_rotation(::swellanimations::Vector* rotation);
+
   // @@protoc_insertion_point(class_scope:swellanimations.Node)
  private:
   inline void set_has_name();
@@ -492,6 +501,8 @@ class Node : public ::google::protobuf::Message {
   inline void clear_has_eularangles();
   inline void set_has_parent();
   inline void clear_has_parent();
+  inline void set_has_rotation();
+  inline void clear_has_rotation();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -502,6 +513,7 @@ class Node : public ::google::protobuf::Message {
   ::swellanimations::Vector* eularangles_;
   ::google::protobuf::RepeatedPtrField< ::swellanimations::Node > children_;
   ::swellanimations::Node* parent_;
+  ::swellanimations::Vector* rotation_;
   friend void  protobuf_AddDesc_modeldata_2eproto();
   friend void protobuf_AssignDesc_modeldata_2eproto();
   friend void protobuf_ShutdownFile_modeldata_2eproto();
@@ -1286,6 +1298,47 @@ inline void Node::set_allocated_parent(::swellanimations::Node* parent) {
     clear_has_parent();
   }
   // @@protoc_insertion_point(field_set_allocated:swellanimations.Node.parent)
+}
+
+// optional .swellanimations.Vector rotation = 6;
+inline bool Node::has_rotation() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Node::set_has_rotation() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Node::clear_has_rotation() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Node::clear_rotation() {
+  if (rotation_ != NULL) rotation_->::swellanimations::Vector::Clear();
+  clear_has_rotation();
+}
+inline const ::swellanimations::Vector& Node::rotation() const {
+  // @@protoc_insertion_point(field_get:swellanimations.Node.rotation)
+  return rotation_ != NULL ? *rotation_ : *default_instance_->rotation_;
+}
+inline ::swellanimations::Vector* Node::mutable_rotation() {
+  set_has_rotation();
+  if (rotation_ == NULL) rotation_ = new ::swellanimations::Vector;
+  // @@protoc_insertion_point(field_mutable:swellanimations.Node.rotation)
+  return rotation_;
+}
+inline ::swellanimations::Vector* Node::release_rotation() {
+  clear_has_rotation();
+  ::swellanimations::Vector* temp = rotation_;
+  rotation_ = NULL;
+  return temp;
+}
+inline void Node::set_allocated_rotation(::swellanimations::Vector* rotation) {
+  delete rotation_;
+  rotation_ = rotation;
+  if (rotation) {
+    set_has_rotation();
+  } else {
+    clear_has_rotation();
+  }
+  // @@protoc_insertion_point(field_set_allocated:swellanimations.Node.rotation)
 }
 
 // -------------------------------------------------------------------

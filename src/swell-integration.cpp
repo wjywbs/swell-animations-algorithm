@@ -4,7 +4,6 @@
 #include <string.h>
 #include "swell-integration.h"
 #include "AnimationGeneration.cpp"
-#include "AnimationLayering.cpp"
 #include "modeldata.pb.h"
 
 using namespace swellanimations;

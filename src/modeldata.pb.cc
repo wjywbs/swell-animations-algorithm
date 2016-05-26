@@ -102,12 +102,13 @@ void protobuf_AssignDesc_modeldata_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Vector));
   Node_descriptor_ = file->message_type(3);
-  static const int Node_offsets_[5] = {
+  static const int Node_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Node, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Node, position_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Node, eularangles_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Node, children_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Node, parent_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Node, rotation_),
   };
   Node_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -215,17 +216,18 @@ void protobuf_AddDesc_modeldata_2eproto() {
     "nPoint\022\026\n\016numberOfFrames\030\005 \002(\005\0228\n\017animat"
     "ionLayers\030\006 \003(\0132\037.swellanimations.Animat"
     "ionLayer\")\n\006Vector\022\t\n\001x\030\001 \002(\001\022\t\n\001y\030\002 \002(\001"
-    "\022\t\n\001z\030\003 \002(\001\"\275\001\n\004Node\022\014\n\004name\030\001 \001(\t\022)\n\010po"
+    "\022\t\n\001z\030\003 \002(\001\"\350\001\n\004Node\022\014\n\004name\030\001 \001(\t\022)\n\010po"
     "sition\030\002 \001(\0132\027.swellanimations.Vector\022,\n"
     "\013eularAngles\030\003 \001(\0132\027.swellanimations.Vec"
     "tor\022\'\n\010children\030\004 \003(\0132\025.swellanimations."
     "Node\022%\n\006parent\030\005 \001(\0132\025.swellanimations.N"
-    "ode\"a\n\rRotationPoint\022)\n\010Rotation\030\001 \002(\0132\027"
-    ".swellanimations.Vector\022\021\n\tnumFrames\030\002 \002"
-    "(\005\022\022\n\nstartFrame\030\003 \002(\005\"e\n\016AnimationLayer"
-    "\022,\n\013layerPoints\030\001 \003(\0132\027.swellanimations."
-    "Vector\022\021\n\tnumFrames\030\002 \002(\005\022\022\n\nstartFrame\030"
-    "\003 \002(\005", 845);
+    "ode\022)\n\010rotation\030\006 \001(\0132\027.swellanimations."
+    "Vector\"a\n\rRotationPoint\022)\n\010Rotation\030\001 \002("
+    "\0132\027.swellanimations.Vector\022\021\n\tnumFrames\030"
+    "\002 \002(\005\022\022\n\nstartFrame\030\003 \002(\005\"e\n\016AnimationLa"
+    "yer\022,\n\013layerPoints\030\001 \003(\0132\027.swellanimatio"
+    "ns.Vector\022\021\n\tnumFrames\030\002 \002(\005\022\022\n\nstartFra"
+    "me\030\003 \002(\005", 888);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "modeldata.proto", &protobuf_RegisterTypes);
   Animation::default_instance_ = new Animation();
@@ -1264,6 +1266,7 @@ const int Node::kPositionFieldNumber;
 const int Node::kEularAnglesFieldNumber;
 const int Node::kChildrenFieldNumber;
 const int Node::kParentFieldNumber;
+const int Node::kRotationFieldNumber;
 #endif  // !_MSC_VER
 
 Node::Node()
@@ -1276,6 +1279,7 @@ void Node::InitAsDefaultInstance() {
   position_ = const_cast< ::swellanimations::Vector*>(&::swellanimations::Vector::default_instance());
   eularangles_ = const_cast< ::swellanimations::Vector*>(&::swellanimations::Vector::default_instance());
   parent_ = const_cast< ::swellanimations::Node*>(&::swellanimations::Node::default_instance());
+  rotation_ = const_cast< ::swellanimations::Vector*>(&::swellanimations::Vector::default_instance());
 }
 
 Node::Node(const Node& from)
@@ -1292,6 +1296,7 @@ void Node::SharedCtor() {
   position_ = NULL;
   eularangles_ = NULL;
   parent_ = NULL;
+  rotation_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1308,6 +1313,7 @@ void Node::SharedDtor() {
     delete position_;
     delete eularangles_;
     delete parent_;
+    delete rotation_;
   }
 }
 
@@ -1333,7 +1339,7 @@ Node* Node::New() const {
 }
 
 void Node::Clear() {
-  if (_has_bits_[0 / 32] & 23) {
+  if (_has_bits_[0 / 32] & 55) {
     if (has_name()) {
       if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         name_->clear();
@@ -1347,6 +1353,9 @@ void Node::Clear() {
     }
     if (has_parent()) {
       if (parent_ != NULL) parent_->::swellanimations::Node::Clear();
+    }
+    if (has_rotation()) {
+      if (rotation_ != NULL) rotation_->::swellanimations::Vector::Clear();
     }
   }
   children_.Clear();
@@ -1429,6 +1438,19 @@ bool Node::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(50)) goto parse_rotation;
+        break;
+      }
+
+      // optional .swellanimations.Vector rotation = 6;
+      case 6: {
+        if (tag == 50) {
+         parse_rotation:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_rotation()));
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -1492,6 +1514,12 @@ void Node::SerializeWithCachedSizes(
       5, this->parent(), output);
   }
 
+  // optional .swellanimations.Vector rotation = 6;
+  if (has_rotation()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      6, this->rotation(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1541,6 +1569,13 @@ void Node::SerializeWithCachedSizes(
         5, this->parent(), target);
   }
 
+  // optional .swellanimations.Vector rotation = 6;
+  if (has_rotation()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        6, this->rotation(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1579,6 +1614,13 @@ int Node::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->parent());
+    }
+
+    // optional .swellanimations.Vector rotation = 6;
+    if (has_rotation()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->rotation());
     }
 
   }
@@ -1629,6 +1671,9 @@ void Node::MergeFrom(const Node& from) {
     if (from.has_parent()) {
       mutable_parent()->::swellanimations::Node::MergeFrom(from.parent());
     }
+    if (from.has_rotation()) {
+      mutable_rotation()->::swellanimations::Vector::MergeFrom(from.rotation());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1657,6 +1702,9 @@ bool Node::IsInitialized() const {
   if (has_parent()) {
     if (!this->parent().IsInitialized()) return false;
   }
+  if (has_rotation()) {
+    if (!this->rotation().IsInitialized()) return false;
+  }
   return true;
 }
 
@@ -1667,6 +1715,7 @@ void Node::Swap(Node* other) {
     std::swap(eularangles_, other->eularangles_);
     children_.Swap(&other->children_);
     std::swap(parent_, other->parent_);
+    std::swap(rotation_, other->rotation_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
