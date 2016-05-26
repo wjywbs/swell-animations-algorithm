@@ -75,17 +75,43 @@ pt MovePoint(pt a_spline, pt b_spline, pt a_model, pt b_model) {
  * curve given by { a_spline, b_spline, c_spline }
  */
 void MoveVector(Vector* a_model, Vector* b_model, Vector* a_spline, Vector* b_spline, int dist_to_dloa) {
-	double theta_spline = GetAngleBetweenVectors(*a_spline, *b_spline);
-	double dist_spline  = DistanceBetweenPoints(*a_spline, *b_spline);
-	double dist_model   = DistanceBetweenPoints(*a_model, *b_model);
+	/* Get normalized vector from point a_spline to b_spline */
+	double v_spline_x = b_spline->x() - a_spline->x();
+	double v_spline_y = b_spline->y() - a_spline->y();
+	double v_spline_z = b_spline->z() - a_spline->z();
+	double v_spline_magnitude = sqrt(pow(v_spline_x, 2) +
+					pow(v_spline_y, 2) +
+					pow(v_spline_z, 2)
+					);
+	Vector *normal_spline =  new Vector;
 
-	double ratio = dist_model/dist_spline;
+	normal_spline->set_x(v_spline_x/v_spline_magnitude);
+	normal_spline->set_y(v_spline_y/v_spline_magnitude);
+	normal_spline->set_z(v_spline_z/v_spline_magnitude);
 
-	double new_x = b_model->x() + (cos(theta_spline)/(dist_to_dloa == 0? 1 : (double)dist_to_dloa));
-	double new_y = b_model->y() + (sin(theta_spline)/(dist_to_dloa == 0? 1 : (double)dist_to_dloa));
+	/* Get magnitude from point a_model to b_model */
+	double m_spline_x = b_model->x() - a_model->x();
+	double m_spline_y = b_model->y() - a_model->y();
+	double m_spline_z = b_model->z() - a_model->z();
+	double m_spline_magnitude = sqrt(pow(m_spline_x, 2) +
+					pow(m_spline_y, 2) +
+					pow(m_spline_z, 2)
+					);
 
-	b_model->set_x(new_x);
-	b_model->set_y(new_y);
+	/* Get new vector from a_model to where b_model should move to */
+	double new_point_x = v_spline_x + a_model->x();
+	double new_point_y = v_spline_y + a_model->y();
+	double new_point_z = v_spline_z + a_model->z();
+
+	/* Scale the vector coordinates */
+	new_point_x*=m_spline_magnitude;
+	new_point_y*=m_spline_magnitude;
+	new_point_z*=m_spline_magnitude;
+
+	/* Set the points in the model */
+	b_model->set_x(new_point_x);
+	b_model->set_y(new_point_y);
+	b_model->set_z(new_point_z);
 }
 
 /*vector<pt> Morph(vector<pt> detail, vector<pt> model) {
@@ -116,6 +142,7 @@ void Morph(Node *frames, AnimationLayer* layer, int dloa_size, int dist_to_dloa)
 	Node *temp = nextchild;
 	while(temp->children_size() > 0) {
 		childcount++;
+		temp = temp->mutable_children(0);
 	}
 	childrenleft = childcount;
 	temp = NULL;
@@ -155,11 +182,16 @@ void Morph(Node *frames, AnimationLayer* layer, int dloa_size, int dist_to_dloa)
 		if(x>20)
 			break;
 	}
-
-	
 }
 
 void AddLayering(ModelData *modelData, Animation *animation) {
+ofstream o;
+o.open("debug");
+o << "nlayers: " << modelData->animationlayers_size() << endl;
+o << "layer(0).start: " << modelData->animationlayers(0).startframe() << endl;
+o << "layer(0).numframe: " << modelData->animationlayers(0).numframes() << endl;
+o << "layer(0).layerpointsize: " << modelData->animationlayers(0).layerpoints_size() << endl;
+o.close();
 	for(int i=0; i < modelData->animationlayers_size(); i++) {
 		for(int j = modelData->animationlayers(i).startframe();
 		    j < modelData->animationlayers(i).startframe() +
