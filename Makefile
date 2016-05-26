@@ -29,9 +29,9 @@ sarahb: createBin $(SRCFILES) $(HEADERS)
 test: createBin $(SRCFILES) $(HEADERS)
 	g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTests.cpp $(CXXFLAGS_TEST)
 	$(EXEC_TEST)
-	g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTestLayering.cpp bin/swell-animations.so $(CXXFLAGS_TEST)
+	g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTestLayering.cpp src/modeldata.pb.cc $(CXXFLAGS_TEST)
 	$(EXEC_TEST)
-	g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTestsAnimationGeneration.cpp bin/swell-animations.so $(CXXFLAGS_TEST)
+	g++ $(BUILD_TEST) -I$(INCDIR) src/UnitTestsAnimationGeneration.cpp src/modeldata.pb.cc $(CXXFLAGS_TEST)
 	$(EXEC_TEST)
 
 createBin:
