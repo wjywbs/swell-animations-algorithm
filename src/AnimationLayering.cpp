@@ -135,7 +135,7 @@ void MoveVector(Vector* a_model, Vector* b_model, Vector* a_spline, Vector* b_sp
 void Morph(Node *frames, AnimationLayer* layer, int dloa_size, int dist_to_dloa) {
 	Vector *current_position = frames->mutable_position();
 	Node *nextchild = frames->mutable_children(0);
-	int childcount = 0;
+	int childcount = 1;
 	int childrenleft = 0;
 
 	// Find number of points from child root
@@ -144,9 +144,79 @@ void Morph(Node *frames, AnimationLayer* layer, int dloa_size, int dist_to_dloa)
 		childcount++;
 		temp = temp->mutable_children(0);
 	}
+	// Get mid point child
+	Node *midpoint = nextchild;
+	for(int c = 0; c<childcount/2; c++) {
+		midpoint = midpoint->mutable_children(0);
+	}
 	childrenleft = childcount;
 	temp = NULL;
 
+ofstream o;
+o.open("debug", ofstream::app);
+o << "CHILDREN = " << childcount << endl;
+o << "DLOAD SIZE = " << dloa_size << endl;
+o.close();
+
+	/* Move points on model spine from center out towards the head while
+	 * trying to mirror the detail LOA */
+	temp = midpoint;
+	for(int x = childcount/2; x > 0; x--) {
+		int first_bound = (dloa_size/100)*(100*(x)/childcount);
+		int next_bound = (dloa_size/100)*(100*(x-1)/childcount);
+
+		// make sure we don't go out of bounds
+		if(next_bound > dloa_size) {
+			next_bound = dloa_size;
+		}
+
+		MoveVector(	temp->mutable_position(),
+				temp->mutable_parent()->mutable_position(),
+				layer->mutable_layerpoints(first_bound),
+				layer->mutable_layerpoints(next_bound),
+				dist_to_dloa
+			  );
+
+		if(! temp->has_parent()) {
+			break;
+		}
+		temp = temp->mutable_parent();
+	}
+	/* Since the head of the list is disjointed, we need to manually move
+	 * it as well */
+	MoveVector(	nextchild->mutable_position(),
+			current_position,
+			layer->mutable_layerpoints((dloa_size/100)*(100*(1)/childcount)),
+			layer->mutable_layerpoints(0),
+			dist_to_dloa
+		  );
+
+	temp = midpoint;
+	for(int x = childcount/2 + 1; x < childcount; x++) {
+		// establish bounds
+		int first_bound = (dloa_size/100)*(100*(x)/childcount);
+		int next_bound = (dloa_size/100)*(100*(x+1)/childcount);
+
+		// make sure we don't go out of bounds
+		if(next_bound > dloa_size) {
+			next_bound = dloa_size;
+		}
+
+		MoveVector(	temp->mutable_position(),
+				temp->mutable_children(0)->mutable_position(),
+				layer->mutable_layerpoints(first_bound),
+				layer->mutable_layerpoints(next_bound),
+				dist_to_dloa
+				);
+		temp = temp->mutable_children(0);
+
+		if(! temp->children_size() > 0) {
+			break;
+		}
+	}
+
+
+/****************
 	// Morph first point from root position
 	MoveVector(	current_position,
 			nextchild->mutable_position(),
@@ -182,11 +252,12 @@ void Morph(Node *frames, AnimationLayer* layer, int dloa_size, int dist_to_dloa)
 		if(x>20)
 			break;
 	}
+******************/
 }
 
 void AddLayering(ModelData *modelData, Animation *animation) {
 ofstream o;
-o.open("debug");
+o.open("debug", ofstream::app);
 o << "nlayers: " << modelData->animationlayers_size() << endl;
 o << "layer(0).start: " << modelData->animationlayers(0).startframe() << endl;
 o << "layer(0).numframe: " << modelData->animationlayers(0).numframes() << endl;
