@@ -312,7 +312,7 @@ void copySplineToAnimation(vector<struct pt*> spline, Animation* animation){
 }
 
 /* May need someone to double check that I'm using ModelData appropriately since I've never messed around with it before */
-void applyRotationPoints(ModelData* modelData) {
+void applyRotationPoints(ModelData* modelData, Animation* animation) {
 	Node model = modelData->model();
 
 	// Store the rotation angle values in a vector for later use
@@ -344,10 +344,48 @@ void applyRotationPoints(ModelData* modelData) {
 
 		// For each frame between the start and end frame, modify the eular angles by the appropriate value stored in the rotationAngles vector
 		for (int j = startframe; j <= endframe; j++) {
-			model.mutable_rotation()->set_x(rotationAngles.at(i)->x);
-			model.mutable_rotation()->set_y(rotationAngles.at(i)->y);
-			model.mutable_rotation()->set_z(rotationAngles.at(i)->z);
+			animation->mutable_frames(j)->mutable_rotation()->set_x(rotationAngles.at(i)->x);
+			animation->mutable_frames(j)->mutable_rotation()->set_y(rotationAngles.at(i)->y);
+			animation->mutable_frames(j)->mutable_rotation()->set_z(rotationAngles.at(i)->z);
 		}
+
+		//Reverse for the frames after
+		int end = endframe + rp.numframes();
+		int frameEndForReverse = min(animation->frames_size(), end);
+		for (int j = endframe + 1; j <= frameEndForReverse; j++) {
+			animation->mutable_frames(j)->mutable_rotation()->set_x(-rotationAngles.at(i)->x);
+			animation->mutable_frames(j)->mutable_rotation()->set_y(-rotationAngles.at(i)->y);
+			animation->mutable_frames(j)->mutable_rotation()->set_z(-rotationAngles.at(i)->z);
+		}
+	}
+}
+
+
+float CalculateDistance(struct  pt* p1, Vector* p2) {
+	float diffY = p1->y - p2->y();
+	float diffX = p1->x - p2->x();
+	float diffZ = p1->z - p2->z();
+	return sqrt((diffY * diffY) + (diffX * diffX) + (diffZ * diffZ));
+}
+
+
+void adjustRotationPointLocations(ModelData* modelData, vector<struct pt*> spline) {
+	for (int x = 0; x < modelData->rotationpoints_size(); x++) {
+		RotationPoint* rotPoint = modelData->mutable_rotationpoints(x);
+		int startFrame = rotPoint->startframe();
+		int numFrames = rotPoint->numframes();
+		Vector* location = modelData->mutable_controlpoints(startFrame + numFrames);
+		float closestDistance = CalculateDistance(spline.at(0), location);
+		int closestFrame = 0;
+		for (int i = 1; i < spline.size(); i++){
+			float distance = CalculateDistance(spline.at(i), location);
+			if (distance < closestDistance) {
+				closestDistance = distance;
+				closestFrame = i;
+			}
+		}
+		rotPoint->set_numframes(min(numFrames, closestFrame + 1));
+		rotPoint->set_startframe(max(closestFrame - numFrames, 0));
 	}
 }
 
@@ -360,7 +398,8 @@ Animation* getFrames(ModelData* modelData) {
     // evaluateDLOA
     animation = evaluateDLOA(modelData, spline);
 	// apply rotation points to the model data
-	applyRotationPoints(modelData);
+	adjustRotationPointLocations(modelData, spline);
+	applyRotationPoints(modelData, animation);
 
 	if(modelData->animationlayers_size() > 0) {
 		//Call layering
