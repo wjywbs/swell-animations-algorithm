@@ -23,3 +23,10 @@ http://vps73020.vps.ovh.ca:8080/job/backend/ws/bin/
 
 ## Jenkins unit test:
 http://vps73020.vps.ovh.ca:8080/job/backend-unit-test/
+
+## Misc
+* dependencies
+```
+libprotobuf-c-dev libprotobuf-dev libprotobuf9v5 libprotoc-dev libprotoc9v5
+libgtest-dev
+```
