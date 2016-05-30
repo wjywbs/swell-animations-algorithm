@@ -345,6 +345,26 @@ void adjustRotationPointLocations(ModelData* modelData, vector<struct pt*> splin
 	}
 }
 
+void adjustAnimationLayers(ModelData* modelData, vector<struct pt*> spline) {
+	for (int x = 0; x < modelData->animationlayers_size(); x++) {
+		AnimationLayer* animLayer = modelData->mutable_animationlayers(x);
+		int startFrame = animLayer->startframe();
+		int numFrames = animLayer->numframes();
+		Vector* location = modelData->mutable_controlpoints(startFrame + numFrames);
+		float closestDistance = CalculateDistance(spline.at(0), location);
+		int closestFrame = 0;
+		for (int i = 1; i < spline.size(); i++){
+			float distance = CalculateDistance(spline.at(i), location);
+			if (distance < closestDistance) {
+				closestDistance = distance;
+				closestFrame = i;
+			}
+		}
+		animLayer->set_numframes(min(numFrames, closestFrame + 1));
+		animLayer->set_startframe(max(closestFrame - numFrames, 0));
+	}
+}
+
 /* returns an Animation object to send back to Unity */
 Animation* getFrames(ModelData* modelData) {
 	Node model = modelData->model();
@@ -359,6 +379,7 @@ Animation* getFrames(ModelData* modelData) {
 
 	if(modelData->animationlayers_size() > 0) {
 		//Call layering
+		adjustAnimationLayers(modelData, spline);
 		AddLayering(modelData, animation);
 	}
 	//set the spline in the return animation
