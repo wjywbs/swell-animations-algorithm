@@ -12,32 +12,31 @@ Point createPoint(double x, double y, double z) {
 }
 
 /* Add two points */
-Point add(const Point l, const Point r) {
+Point add(const Point& l, const Point& r) {
   Point tmp = createPoint(l.x + r.x, l.y + r.y, l.z + r.z);
   return tmp;
 }
 
 /* Subtract two points */
-Point minusPoint(const Point l, const Point r) {
+Point minusPoint(const Point& l, const Point& r) {
   Point tmp = createPoint(l.x - r.x, l.y - r.y, l.z - r.z);
   return tmp;
 }
 
 /* Multiple two points */
-Point mult(const Point l, const Point r) {
+Point mult(const Point& l, const Point& r) {
   Point tmp = createPoint(l.x * r.x, l.y * r.y, l.z * r.z);
   return tmp;
 }
 
 /* Multiply a point by a scalar */
-Point multScalar(const double scalar, const Point point) {
-  Point tmp =
-      createPoint(point.x * scalar, point.y * scalar, point.z * scalar);
+Point multScalar(const double scalar, const Point& point) {
+  Point tmp = createPoint(point.x * scalar, point.y * scalar, point.z * scalar);
   return tmp;
 }
 
 /* Get the distance between two points */
-double getDistance(const Point l, const Point r) {
+double getDistance(const Point& l, const Point& r) {
   Point tmp = minusPoint(l, r);
   double x = tmp.x;
   double y = tmp.y;
@@ -46,15 +45,13 @@ double getDistance(const Point l, const Point r) {
 }
 
 /* One sided diff */
-Point forwardDiff(const Point a, const Point b) {
+Point forwardDiff(const Point& a, const Point& b) {
   Point tmp = minusPoint(b, a);
   return multScalar(3, tmp);
 }
 
 /* Three point diff */
-Point midpointDiff(const Point a,
-                        const Point b,
-                        const Point c) {
+Point midpointDiff(const Point& a, const Point& b, const Point& c) {
   // Define the offset to use
   const double offset = ((double)3) / 2;
 
@@ -85,10 +82,10 @@ double hermiteBasis11(double t) {
 }
 
 Point hermite(const double t,
-                   const Point p0,
-                   const Point m0,
-                   const Point p1,
-                   const Point m1) {
+              const Point& p0,
+              const Point& m0,
+              const Point& p1,
+              const Point& m1) {
   return add(
       add(multScalar(hermiteBasis00(t), p0), multScalar(hermiteBasis10(t), m0)),
       add(multScalar(hermiteBasis01(t), p1),

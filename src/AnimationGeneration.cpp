@@ -22,7 +22,7 @@ using namespace std;
 
 // Returns the length of the spline by adding the distances between all
 // interpolated points. retthis is the length of the user drawn curve.
-double getSplineLength(vector<Point> spline) {
+double getSplineLength(const vector<Point>& spline) {
   double length = 0;
   for (int i = 0; i < spline.size() - 1; i++) {
     double d = getDistance(spline.at(i), spline.at(i + 1));
@@ -33,8 +33,8 @@ double getSplineLength(vector<Point> spline) {
 
 // Returns the length of the longest path from the root.
 // This is roughly the length of the model in the z direction.
-double furthestNodeDistance(Node root) {
-  double max = (double)fabs(root.mutable_position()->z());
+double furthestNodeDistance(const Node& root) {
+  double max = (double)fabs(root.position().z());
   for (int i = 0; i < root.children_size(); i++) {
     double n = furthestNodeDistance(root.children(i));
     if (n > max)
@@ -88,7 +88,7 @@ vector<int> mapPoints(Node* root,
 // corresponding points in the spline. When called in succession, it moves the
 // model and all of its joints along the spline.
 Node jointsToSpline(Node* root,
-                    vector<Point> spline,
+                    const vector<Point>& spline,
                     vector<int> correspondingPoints,
                     int& index,
                     ofstream* myfile) {
@@ -199,7 +199,7 @@ std::vector<Point> getSpline(ModelData* modelData) {
 // Returns an animation of the model evaluated at a certain point along spline.
 // TODO: get the time it takes the user to draw the LOA, going to need the
 // control points dropped at intervals
-Animation* evaluateDLOA(ModelData* modelData, vector<Point> spline) {
+Animation* evaluateDLOA(ModelData* modelData, const vector<Point>& spline) {
   Animation* animation = new Animation();
   ofstream myfile;
   // myfile.open ("/home/psarahdactyl/Documents/ccfunfunfun.txt");
@@ -274,9 +274,9 @@ Animation* evaluateDLOA(ModelData* modelData, vector<Point> spline) {
   return animation;
 }
 
-void copySplineToAnimation(vector<Point> spline, Animation* animation) {
+void copySplineToAnimation(const vector<Point>& spline, Animation* animation) {
   for (int x = 0; x < spline.size(); x++) {
-    Point& p = spline.at(x);
+    const Point& p = spline.at(x);
     Vector* vector = animation->add_spline();
     vector->set_x(p.x);
     vector->set_y(p.y);
@@ -326,24 +326,24 @@ void applyRotationPoints(ModelData* modelData, Animation* animation) {
   }
 }
 
-float CalculateDistance(Point p1, Vector* p2) {
-  float diffY = p1.y - p2->y();
-  float diffX = p1.x - p2->x();
-  float diffZ = p1.z - p2->z();
+float CalculateDistance(const Point& p1, const Vector& p2) {
+  float diffY = p1.y - p2.y();
+  float diffX = p1.x - p2.x();
+  float diffZ = p1.z - p2.z();
   return sqrt((diffY * diffY) + (diffX * diffX) + (diffZ * diffZ));
 }
 
 void adjustRotationPointLocations(ModelData* modelData,
-                                  vector<Point> spline) {
+                                  const vector<Point>& spline) {
   for (int x = 0; x < modelData->rotationpoints_size(); x++) {
     RotationPoint* rotPoint = modelData->mutable_rotationpoints(x);
     int startFrame = rotPoint->startframe();
     int numFrames = rotPoint->numframes();
     Vector* location = modelData->mutable_controlpoints(startFrame + numFrames);
-    float closestDistance = CalculateDistance(spline.at(0), location);
+    float closestDistance = CalculateDistance(spline.at(0), *location);
     int closestFrame = 0;
     for (int i = 1; i < spline.size(); i++) {
-      float distance = CalculateDistance(spline.at(i), location);
+      float distance = CalculateDistance(spline.at(i), *location);
       if (distance < closestDistance) {
         closestDistance = distance;
         closestFrame = i;
@@ -354,16 +354,16 @@ void adjustRotationPointLocations(ModelData* modelData,
   }
 }
 
-void adjustAnimationLayers(ModelData* modelData, vector<Point> spline) {
+void adjustAnimationLayers(ModelData* modelData, const vector<Point>& spline) {
   for (int x = 0; x < modelData->animationlayers_size(); x++) {
     AnimationLayer* animLayer = modelData->mutable_animationlayers(x);
     int startFrame = animLayer->startframe();
     int numFrames = animLayer->numframes();
     Vector* location = modelData->mutable_controlpoints(startFrame + numFrames);
-    float closestDistance = CalculateDistance(spline.at(0), location);
+    float closestDistance = CalculateDistance(spline.at(0), *location);
     int closestFrame = 0;
     for (int i = 1; i < spline.size(); i++) {
-      float distance = CalculateDistance(spline.at(i), location);
+      float distance = CalculateDistance(spline.at(i), *location);
       if (distance < closestDistance) {
         closestDistance = distance;
         closestFrame = i;
