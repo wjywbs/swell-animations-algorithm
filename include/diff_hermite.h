@@ -1,11 +1,11 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
 struct Direction {
-	double x;
-	double y;
-	double z;
+  double x;
+  double y;
+  double z;
 };
 
 /*
@@ -27,12 +27,12 @@ struct Direction {
  * 	succeeding it in 3D space.
  * 	d = <x, y, z>
  */
-void Differentiate(double a, double b, double c, double t, double *location) {
-	// Break it up so I don't get confused later
-	double tempA = (6*pow(t, 2)*a) - (6*t*a);
-	double tempB = (3*pow(t, 2)*(b-a)) - (4*t*(b-a)) - (b-a);
-	double tempC = (-6*pow(t, 2)*b) + (6*t*b);
-	double tempD = (3*pow(t, 2)*((c-a)/2)) - (2*t*((c-a)/2));
+void Differentiate(double a, double b, double c, double t, double* location) {
+  // Break it up so I don't get confused later
+  double tempA = (6 * pow(t, 2) * a) - (6 * t * a);
+  double tempB = (3 * pow(t, 2) * (b - a)) - (4 * t * (b - a)) - (b - a);
+  double tempC = (-6 * pow(t, 2) * b) + (6 * t * b);
+  double tempD = (3 * pow(t, 2) * ((c - a) / 2)) - (2 * t * ((c - a) / 2));
 
-	*location = tempA + tempB + tempC + tempD;
+  *location = tempA + tempB + tempC + tempD;
 }
