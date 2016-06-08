@@ -22,7 +22,7 @@ using namespace std;
 
 // Returns the length of the spline by adding the distances between all
 // interpolated points. retthis is the length of the user drawn curve.
-double getSplineLength(vector<struct pt*> spline) {
+double getSplineLength(vector<Point> spline) {
   double length = 0;
   for (int i = 0; i < spline.size() - 1; i++) {
     double d = getDistance(spline.at(i), spline.at(i + 1));
@@ -88,7 +88,7 @@ vector<int> mapPoints(Node* root,
 // corresponding points in the spline. When called in succession, it moves the
 // model and all of its joints along the spline.
 Node jointsToSpline(Node* root,
-                    vector<struct pt*> spline,
+                    vector<Point> spline,
                     vector<int> correspondingPoints,
                     int& index,
                     ofstream* myfile) {
@@ -97,15 +97,15 @@ Node jointsToSpline(Node* root,
   //*myfile << frame.name() << endl;
 
   int c = correspondingPoints.at(index);
-  struct pt* s = spline.at(c);
+  Point s = spline.at(c);
 
   double x0, x1, x2;
   double y0, y1, y2;
   double z0, z1, z2;
 
-  struct pt* s0;
-  struct pt* s2;
-  struct pt* m0;
+  Point s0;
+  Point s2;
+  Point m0;
 
   if (c == 0) {
     s2 = spline.at(c + 1);
@@ -119,13 +119,13 @@ Node jointsToSpline(Node* root,
     m0 = midpointDiff(s0, s, s2);
   }
 
-  frame.mutable_position()->set_x(s->x);
-  frame.mutable_position()->set_y(s->y);
-  frame.mutable_position()->set_z(s->z);
+  frame.mutable_position()->set_x(s.x);
+  frame.mutable_position()->set_y(s.y);
+  frame.mutable_position()->set_z(s.z);
 
-  frame.mutable_eularangles()->set_x(m0->x);
-  frame.mutable_eularangles()->set_y(m0->y);
-  frame.mutable_eularangles()->set_z(m0->z);
+  frame.mutable_eularangles()->set_x(m0.x);
+  frame.mutable_eularangles()->set_y(m0.y);
+  frame.mutable_eularangles()->set_z(m0.z);
 
   //*myfile << "-- ";
   //*myfile << root.name() << endl;
@@ -143,8 +143,8 @@ Node jointsToSpline(Node* root,
 
 // Uses hermite.cpp to calculate a spline based on control points
 // for rolling and keyframing (connecting separated LOAs).
-std::vector<struct pt*> getSpline(ModelData* modelData) {
-  std::vector<struct pt*> v;
+std::vector<Point> getSpline(ModelData* modelData) {
+  std::vector<Point> v;
   // TODO: check for self intersection of line
   // idea: check if any two control points have the exact same position
 
@@ -160,33 +160,33 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
     Vector* p0Vec = modelData->mutable_controlpoints(i);
     Vector* p1Vec = modelData->mutable_controlpoints(i + 1);
 
-    struct pt* p0 = createPoint(p0Vec->x(), p0Vec->y(), p0Vec->z());
-    struct pt* p1 = createPoint(p1Vec->x(), p1Vec->y(), p1Vec->z());
-    struct pt* m0;
-    struct pt* m1;
+    Point p0 = createPoint(p0Vec->x(), p0Vec->y(), p0Vec->z());
+    Point p1 = createPoint(p1Vec->x(), p1Vec->y(), p1Vec->z());
+    Point m0;
+    Point m1;
 
     if (i == 0) {
       Vector* p2Vec = modelData->mutable_controlpoints(i + 2);
-      struct pt* p2 = createPoint(p2Vec->x(), p2Vec->y(), p2Vec->z());
+      Point p2 = createPoint(p2Vec->x(), p2Vec->y(), p2Vec->z());
       m0 = forwardDiff(p0, p1);
       m1 = midpointDiff(p0, p1, p2);
     } else if (i == modelData->controlpoints_size() - 2) {
       Vector* p2Vec = modelData->mutable_controlpoints(i - 2);
-      struct pt* p2 = createPoint(p2Vec->x(), p2Vec->y(), p2Vec->z());
+      Point p2 = createPoint(p2Vec->x(), p2Vec->y(), p2Vec->z());
       m1 = forwardDiff(p0, p1);
       m0 = midpointDiff(p2, p0, p1);
     } else {
       Vector* p00Vec = modelData->mutable_controlpoints(i - 1);
-      struct pt* p00 = createPoint(p00Vec->x(), p00Vec->y(), p00Vec->z());
+      Point p00 = createPoint(p00Vec->x(), p00Vec->y(), p00Vec->z());
       Vector* p2Vec = modelData->mutable_controlpoints(i + 2);
-      struct pt* p2 = createPoint(p2Vec->x(), p2Vec->y(), p2Vec->z());
+      Point p2 = createPoint(p2Vec->x(), p2Vec->y(), p2Vec->z());
       m0 = midpointDiff(p00, p0, p1);
       m1 = midpointDiff(p0, p1, p2);
     }
 
     if (currentInc < i + 1) {
       for (double t = (currentInc - i + 1); t < 1; t += frameIncs) {
-        struct pt* r = hermite(t, p0, m0, p1, m1);
+        Point r = hermite(t, p0, m0, p1, m1);
         v.push_back(r);
         currentInc += frameIncs;
       }
@@ -199,7 +199,7 @@ std::vector<struct pt*> getSpline(ModelData* modelData) {
 // Returns an animation of the model evaluated at a certain point along spline.
 // TODO: get the time it takes the user to draw the LOA, going to need the
 // control points dropped at intervals
-Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
+Animation* evaluateDLOA(ModelData* modelData, vector<Point> spline) {
   Animation* animation = new Animation();
   ofstream myfile;
   // myfile.open ("/home/psarahdactyl/Documents/ccfunfunfun.txt");
@@ -225,24 +225,24 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
   }
 
   // End animation on curve unless there are not enough points on spline.
-  vector<struct pt*> extra;
+  vector<Point> extra;
   if (spline.size() < pointsPerFrame) {
-    struct pt* last = spline.at(spline.size() - 1);
-    struct pt* secondLast = spline.at(spline.size() - 2);
+    Point last = spline.at(spline.size() - 1);
+    Point secondLast = spline.at(spline.size() - 2);
 
-    double x = last->x - secondLast->x;
-    double y = last->y - secondLast->y;
-    double z = last->z - secondLast->z;
-    struct pt* difference = createPoint(x, y, z);
+    double x = last.x - secondLast.x;
+    double y = last.y - secondLast.y;
+    double z = last.z - secondLast.z;
+    Point difference = createPoint(x, y, z);
 
     for (double t = 1; t <= pointsPerFrame; t++) {
-      struct pt* diff = multScalar(t, difference);
-      struct pt* r = add(last, diff);
+      Point diff = multScalar(t, difference);
+      Point r = add(last, diff);
       extra.push_back(r);
     }
   }
 
-  vector<struct pt*> newSpline;
+  vector<Point> newSpline;
   newSpline.reserve(spline.size() + extra.size());  // preallocate memory
   newSpline.insert(newSpline.end(), spline.begin(), spline.end());
   newSpline.insert(newSpline.end(), extra.begin(), extra.end());
@@ -274,13 +274,13 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
   return animation;
 }
 
-void copySplineToAnimation(vector<struct pt*> spline, Animation* animation) {
+void copySplineToAnimation(vector<Point> spline, Animation* animation) {
   for (int x = 0; x < spline.size(); x++) {
-    struct pt* p = spline.at(x);
+    Point& p = spline.at(x);
     Vector* vector = animation->add_spline();
-    vector->set_x(p->x);
-    vector->set_y(p->y);
-    vector->set_z(p->z);
+    vector->set_x(p.x);
+    vector->set_y(p.y);
+    vector->set_z(p.z);
   }
 }
 
@@ -290,7 +290,7 @@ void applyRotationPoints(ModelData* modelData, Animation* animation) {
   Node model = modelData->model();
 
   // Store the rotation angle values in a vector for later use
-  vector<struct pt*> rotationAngles;
+  vector<Point> rotationAngles;
   RotationPoint rp;
 
   // Iterate over each rotation point and calculate the rotation angle for
@@ -298,13 +298,13 @@ void applyRotationPoints(ModelData* modelData, Animation* animation) {
   for (int i = 0; i < modelData->rotationpoints_size(); i++) {
     rp = modelData->rotationpoints(i);
 
-    struct pt* point = new struct pt;
+    Point point;
 
     // The model will begin to rotate some specified number of frames before the
     // rotation point- this number is retrieved in the numframes() method
-    point->x = rp.mutable_rotation()->x();
-    point->y = rp.mutable_rotation()->y();
-    point->z = rp.mutable_rotation()->z();
+    point.x = rp.mutable_rotation()->x();
+    point.y = rp.mutable_rotation()->y();
+    point.z = rp.mutable_rotation()->z();
     rotationAngles.push_back(point);
   }
 
@@ -318,23 +318,23 @@ void applyRotationPoints(ModelData* modelData, Animation* animation) {
     endframe = rp.startframe() + rp.numframes();
 
     animation->mutable_frames(endframe)->mutable_rotation()->set_x(
-        rotationAngles.at(i)->x);
+        rotationAngles.at(i).x);
     animation->mutable_frames(endframe)->mutable_rotation()->set_y(
-        rotationAngles.at(i)->y);
+        rotationAngles.at(i).y);
     animation->mutable_frames(endframe)->mutable_rotation()->set_z(
-        rotationAngles.at(i)->z);
+        rotationAngles.at(i).z);
   }
 }
 
-float CalculateDistance(struct pt* p1, Vector* p2) {
-  float diffY = p1->y - p2->y();
-  float diffX = p1->x - p2->x();
-  float diffZ = p1->z - p2->z();
+float CalculateDistance(Point p1, Vector* p2) {
+  float diffY = p1.y - p2->y();
+  float diffX = p1.x - p2->x();
+  float diffZ = p1.z - p2->z();
   return sqrt((diffY * diffY) + (diffX * diffX) + (diffZ * diffZ));
 }
 
 void adjustRotationPointLocations(ModelData* modelData,
-                                  vector<struct pt*> spline) {
+                                  vector<Point> spline) {
   for (int x = 0; x < modelData->rotationpoints_size(); x++) {
     RotationPoint* rotPoint = modelData->mutable_rotationpoints(x);
     int startFrame = rotPoint->startframe();
@@ -354,7 +354,7 @@ void adjustRotationPointLocations(ModelData* modelData,
   }
 }
 
-void adjustAnimationLayers(ModelData* modelData, vector<struct pt*> spline) {
+void adjustAnimationLayers(ModelData* modelData, vector<Point> spline) {
   for (int x = 0; x < modelData->animationlayers_size(); x++) {
     AnimationLayer* animLayer = modelData->mutable_animationlayers(x);
     int startFrame = animLayer->startframe();
@@ -379,7 +379,7 @@ Animation* getFrames(ModelData* modelData) {
   Node model = modelData->model();
   Animation* animation = new Animation();
   // get hermite spline
-  vector<struct pt*> spline = getSpline(modelData);
+  vector<Point> spline = getSpline(modelData);
   // evaluateDLOA
   animation = evaluateDLOA(modelData, spline);
   // apply rotation points to the model data

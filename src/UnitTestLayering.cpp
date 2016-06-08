@@ -4,11 +4,11 @@
 const double EPSILON = (double)1e-6;
 
 TEST(GetAngleBetweenVectors, can_get_angle) {
-  pt a;
+  Point a;
   a.x = 7;
   a.y = 10;
 
-  pt b;
+  Point b;
   b.x = 5;
   b.y = 6;
 
@@ -16,11 +16,11 @@ TEST(GetAngleBetweenVectors, can_get_angle) {
 }
 
 TEST(DistanceBetweenPoints, gets_correct_distance) {
-  pt a;
+  Point a;
   a.x = 7;
   a.y = 10;
 
-  pt b;
+  Point b;
   b.x = 5;
   b.y = 6;
 
@@ -28,12 +28,12 @@ TEST(DistanceBetweenPoints, gets_correct_distance) {
 }
 
 TEST(MovePoint, moves_point_correctly) {
-  pt a = {7, 10, 0};
-  pt b = {5, 6, 0};
-  pt c = {0, 3, 0};
-  pt d = {0, 2, 0};
+  Point a = {7, 10, 0};
+  Point b = {5, 6, 0};
+  Point c = {0, 3, 0};
+  Point d = {0, 2, 0};
 
-  pt result = MovePoint(a, b, c, d);
+  Point result = MovePoint(a, b, c, d);
 
   ASSERT_TRUE(fabs(result.x - (-0.447214)) < EPSILON);
   ASSERT_TRUE(fabs(result.y - (1.105573)) < EPSILON);

@@ -1,10 +1,10 @@
-#ifndef PT_H
-#define PT_H
+#ifndef POINT_H
+#define POINT_H
 
-struct pt {
+struct Point {
   double x;
   double y;
   double z;
 };
 
-#endif
+#endif  // POINT_H

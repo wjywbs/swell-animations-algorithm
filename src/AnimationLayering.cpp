@@ -14,10 +14,9 @@ using namespace swellanimations;
 /*
  * Disposable (for debug purposes): Reads "points"
  */
-vector<pt> ReadPoints(string filename) {
+vector<Point> ReadPoints(string filename) {
   ifstream in(filename.c_str());
-  // pt *points = (pt*) calloc(1, sizeof(struct pt));
-  vector<pt> points;
+  vector<Point> points;
 
   while (in) {
     string line;
@@ -27,7 +26,7 @@ vector<pt> ReadPoints(string filename) {
 
     istringstream ss(line);
     string temp;
-    pt p;
+    Point p;
 
     getline(ss, temp, ' ');
     p.x = atof(temp.c_str());
@@ -40,7 +39,7 @@ vector<pt> ReadPoints(string filename) {
   return points;
 }
 
-double GetAngleBetweenVectors(pt a, pt b) {
+double GetAngleBetweenVectors(Point a, Point b) {
   return atan2(b.y - a.y, b.x - a.x);
 }
 
@@ -48,7 +47,7 @@ double GetAngleBetweenVectors(Vector a, Vector b) {
   return atan2(b.y() - a.y(), b.x() - a.x());
 }
 
-double DistanceBetweenPoints(pt a, pt b) {
+double DistanceBetweenPoints(Point a, Point b) {
   return sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2));
 }
 
@@ -57,7 +56,7 @@ double DistanceBetweenPoints(Vector a, Vector b) {
               pow(b.z() - a.z(), 2));
 }
 
-pt MovePoint(pt a_spline, pt b_spline, pt a_model, pt b_model) {
+Point MovePoint(Point a_spline, Point b_spline, Point a_model, Point b_model) {
   double theta_spline = GetAngleBetweenVectors(a_spline, b_spline);
   double dist_spline = DistanceBetweenPoints(a_spline, b_spline);
   double dist_model = DistanceBetweenPoints(a_model, b_model);
@@ -67,7 +66,7 @@ pt MovePoint(pt a_spline, pt b_spline, pt a_model, pt b_model) {
   double new_x = b_model.x + (cos(theta_spline));
   double new_y = b_model.y + (sin(theta_spline));
 
-  pt new_variant = {new_x, new_y, 0};
+  Point new_variant = {new_x, new_y, 0};
   return new_variant;
 }
 
@@ -115,7 +114,7 @@ void MoveVector(Vector* a_model,
   b_model->set_z(new_point_z);
 }
 
-/*vector<pt> Morph(vector<pt> detail, vector<pt> model) {
+/*vector<Point> Morph(vector<Point> detail, vector<Point> model) {
         vector<int>control;
         control.push_back(0);
         control.push_back(detail.size()*34/100);
@@ -125,7 +124,7 @@ void MoveVector(Vector* a_model,
         control.push_back(detail.size()-1);
 
         for (int i = 0; i < control.size() - 1; i++) {
-                pt new_model_point = MovePoint(detail[control[i]],
+                Point new_model_point = MovePoint(detail[control[i]],
 detail[control[i+1]], model[i], model[i+1]);
                 model[i+1].x = new_model_point.x;
                 model[i+1].y = new_model_point.y;
@@ -278,10 +277,10 @@ void AddLayering(ModelData* modelData, Animation* animation) {
 
 /*
 int main() {
-        vector<pt> splinepoints = ReadPoints(string("spline.out"));
-        vector<pt> modelpoints = ReadPoints(string("current"));
+        vector<Point> splinepoints = ReadPoints(string("spline.out"));
+        vector<Point> modelpoints = ReadPoints(string("current"));
 
-        vector<pt> result = Morph(splinepoints, modelpoints);
+        vector<Point> result = Morph(splinepoints, modelpoints);
         for(int i=0 ; i<result.size(); i++) {
                 printf("%f %f\n", result[i].x, result[i].y);
         }
