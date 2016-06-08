@@ -224,20 +224,22 @@ Animation* evaluateDLOA(ModelData* modelData, vector<struct pt*> spline) {
     myfile << correspondingPoints.at(h) << endl;
   }
 
+  // End animation on curve unless there are not enough points on spline.
   vector<struct pt*> extra;
+  if (spline.size() < pointsPerFrame) {
+    struct pt* last = spline.at(spline.size() - 1);
+    struct pt* secondLast = spline.at(spline.size() - 2);
 
-  struct pt* last = spline.at(spline.size() - 1);
-  struct pt* secondLast = spline.at(spline.size() - 2);
+    double x = last->x - secondLast->x;
+    double y = last->y - secondLast->y;
+    double z = last->z - secondLast->z;
+    struct pt* difference = createPoint(x, y, z);
 
-  double x = last->x - secondLast->x;
-  double y = last->y - secondLast->y;
-  double z = last->z - secondLast->z;
-  struct pt* difference = createPoint(x, y, z);
-
-  for (double t = 1; t <= pointsPerFrame; t++) {
-    struct pt* diff = multScalar(t, difference);
-    struct pt* r = add(last, diff);
-    extra.push_back(r);
+    for (double t = 1; t <= pointsPerFrame; t++) {
+      struct pt* diff = multScalar(t, difference);
+      struct pt* r = add(last, diff);
+      extra.push_back(r);
+    }
   }
 
   vector<struct pt*> newSpline;
@@ -289,7 +291,6 @@ void applyRotationPoints(ModelData* modelData, Animation* animation) {
 
   // Store the rotation angle values in a vector for later use
   vector<struct pt*> rotationAngles;
-  struct pt* point = new struct pt;
   RotationPoint rp;
 
   // Iterate over each rotation point and calculate the rotation angle for
