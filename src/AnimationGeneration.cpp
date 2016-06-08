@@ -199,7 +199,9 @@ std::vector<Point> getSpline(ModelData* modelData) {
 // Returns an animation of the model evaluated at a certain point along spline.
 // TODO: get the time it takes the user to draw the LOA, going to need the
 // control points dropped at intervals
-Animation* evaluateDLOA(ModelData* modelData, const vector<Point>& spline) {
+Animation* evaluateDLOA(ModelData* modelData,
+                        const vector<Point>& spline,
+                        int* modelFrames) {
   Animation* animation = new Animation();
   ofstream myfile;
   // myfile.open ("/home/psarahdactyl/Documents/ccfunfunfun.txt");
@@ -211,6 +213,7 @@ Animation* evaluateDLOA(ModelData* modelData, const vector<Point>& spline) {
 
   // calculate points in spline per frame
   double pointsPerFrame = spline.size() * b;
+  *modelFrames = pointsPerFrame;
   // myfile << pointsPerFrame << endl;
 
   // calculate which point goes with which joint
@@ -249,7 +252,7 @@ Animation* evaluateDLOA(ModelData* modelData, const vector<Point>& spline) {
 
   // go through every point in spline
   // iterating by 1 every time gives us frames overlapping points in the spline
-  for (int i = 0; i < newSpline.size() - pointsPerFrame; i++) {
+  for (int i = 0; i <= newSpline.size() - pointsPerFrame; i++) {
     int index = 0;
     // move model and its joints
     Node frame =
@@ -284,45 +287,48 @@ void copySplineToAnimation(const vector<Point>& spline, Animation* animation) {
   }
 }
 
-// May need someone to double check that I'm using ModelData appropriately since
-// I've never messed around with it before.
-void applyRotationPoints(ModelData* modelData, Animation* animation) {
-  Node model = modelData->model();
+// Normalize angles greater than 180 degree to negative angle.
+double normalizeAngle(double angle) {
+  if (angle > 180)
+    return angle - 360;
+  return angle;
+}
 
-  // Store the rotation angle values in a vector for later use
-  vector<Point> rotationAngles;
-  RotationPoint rp;
-
-  // Iterate over each rotation point and calculate the rotation angle for
-  // adjustment use in the x, y, and z dimensions
+void applyRotationPoints(ModelData* modelData,
+                         Animation* animation,
+                         int modelFrames) {
+  // Iterate over each rotation point and calculate rotation angle for
+  // adjustment use in the x, y, and z dimensions, and the start frame and end
+  // frame.
   for (int i = 0; i < modelData->rotationpoints_size(); i++) {
-    rp = modelData->rotationpoints(i);
-
-    Point point;
-
     // The model will begin to rotate some specified number of frames before the
     // rotation point- this number is retrieved in the numframes() method
-    point.x = rp.mutable_rotation()->x();
-    point.y = rp.mutable_rotation()->y();
-    point.z = rp.mutable_rotation()->z();
-    rotationAngles.push_back(point);
-  }
+    const RotationPoint& rp = modelData->rotationpoints(i);
+    // Consider model length to start earlier.
+    int startframe = max(rp.startframe() - modelFrames, 0);
+    int endframe =
+        min(startframe + rp.numframes(), animation->frames_size() - 1);
 
-  int startframe;
-  int endframe;
+    double x = normalizeAngle(rp.rotation().x()) / rp.numframes(),
+           y = normalizeAngle(rp.rotation().y()) / rp.numframes(),
+           z = normalizeAngle(rp.rotation().z()) / rp.numframes();
 
-  // Iterate over each rotation point, calculating the start frame and end frame
-  for (int i = 0; i < modelData->rotationpoints_size(); i++) {
-    rp = modelData->rotationpoints(i);
-    startframe = rp.startframe();
-    endframe = rp.startframe() + rp.numframes();
+    // For each frame between the start and end frame, modify the eular angles
+    // by the appropriate value stored in the rotationAngles vector
+    for (int j = startframe; j <= endframe; j++) {
+      animation->mutable_frames(j)->mutable_rotation()->set_x(x);
+      animation->mutable_frames(j)->mutable_rotation()->set_y(y);
+      animation->mutable_frames(j)->mutable_rotation()->set_z(z);
+    }
 
-    animation->mutable_frames(endframe)->mutable_rotation()->set_x(
-        rotationAngles.at(i).x);
-    animation->mutable_frames(endframe)->mutable_rotation()->set_y(
-        rotationAngles.at(i).y);
-    animation->mutable_frames(endframe)->mutable_rotation()->set_z(
-        rotationAngles.at(i).z);
+    // Reverse for the frames after
+    int end = endframe + rp.numframes();
+    int frameEndForReverse = min(animation->frames_size() - 1, end);
+    for (int j = endframe + 1; j <= frameEndForReverse; j++) {
+      animation->mutable_frames(j)->mutable_rotation()->set_x(-x);
+      animation->mutable_frames(j)->mutable_rotation()->set_y(-y);
+      animation->mutable_frames(j)->mutable_rotation()->set_z(-z);
+    }
   }
 }
 
@@ -331,27 +337,6 @@ float CalculateDistance(const Point& p1, const Vector& p2) {
   float diffX = p1.x - p2.x();
   float diffZ = p1.z - p2.z();
   return sqrt((diffY * diffY) + (diffX * diffX) + (diffZ * diffZ));
-}
-
-void adjustRotationPointLocations(ModelData* modelData,
-                                  const vector<Point>& spline) {
-  for (int x = 0; x < modelData->rotationpoints_size(); x++) {
-    RotationPoint* rotPoint = modelData->mutable_rotationpoints(x);
-    int startFrame = rotPoint->startframe();
-    int numFrames = rotPoint->numframes();
-    Vector* location = modelData->mutable_controlpoints(startFrame + numFrames);
-    float closestDistance = CalculateDistance(spline.at(0), *location);
-    int closestFrame = 0;
-    for (int i = 1; i < spline.size(); i++) {
-      float distance = CalculateDistance(spline.at(i), *location);
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestFrame = i;
-      }
-    }
-    rotPoint->set_numframes(min(numFrames, closestFrame + 1));
-    rotPoint->set_startframe(max(closestFrame - numFrames, 0));
-  }
 }
 
 void adjustAnimationLayers(ModelData* modelData, const vector<Point>& spline) {
@@ -377,14 +362,13 @@ void adjustAnimationLayers(ModelData* modelData, const vector<Point>& spline) {
 // Returns an Animation object to send back to Unity.
 Animation* getFrames(ModelData* modelData) {
   Node model = modelData->model();
-  Animation* animation = new Animation();
   // get hermite spline
   vector<Point> spline = getSpline(modelData);
   // evaluateDLOA
-  animation = evaluateDLOA(modelData, spline);
+  int modelFrames;
+  Animation* animation = evaluateDLOA(modelData, spline, &modelFrames);
   // apply rotation points to the model data
-  adjustRotationPointLocations(modelData, spline);
-  applyRotationPoints(modelData, animation);
+  applyRotationPoints(modelData, animation, modelFrames);
 
   if (modelData->animationlayers_size() > 0) {
     // Call layering
