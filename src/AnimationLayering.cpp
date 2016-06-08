@@ -209,7 +209,7 @@ void Morph(Node* frames,
                layer->mutable_layerpoints(next_bound), dist_to_dloa);
     temp = temp->mutable_children(0);
 
-    if (!temp->children_size() > 0) {
+    if (!temp->children_size()) {
       break;
     }
   }
